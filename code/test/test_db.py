@@ -16,12 +16,13 @@ import unittest
 import sys
 sys.path.append( '..')
 sys.path.append( '../external')
+from nose.plugins.attrib import attr
+
 import collider
 from Residues import Residues
 
 from test_shared import *
 import test_shared 
-from test_shared import check_cgetnonuis_availability
 
 def psort_old(x,y):
     if(x[1] != y[1]): return -cmp(x[1], y[1]) 
@@ -124,6 +125,7 @@ def do_check_complete(self, mycollider):
         self.assertEqual( mycollider.non_unique_count, 26 )
         self.assertEqual( mycollider.total_count, 12502 )
 
+@attr('mysql') 
 class Test_collider_mysql(unittest.TestCase):
 
     def setUp(self):
@@ -218,8 +220,8 @@ class Test_collider_mysql(unittest.TestCase):
                         collisions_per_peptide[c[3]] = [ t[1] ] ; 
         return collisions_per_peptide
 
-    @check_cgetnonuis_availability
     @attr('slow') 
+    @attr('cpp') 
     def test_complete_without_isotopes(self):
 
         if not self.database_available: return
@@ -239,8 +241,8 @@ class Test_collider_mysql(unittest.TestCase):
         find_clashes_small(self, mycollider, cursor, par, pepids)
         do_check_complete(self, mycollider)
 
-    @check_cgetnonuis_availability
     @attr('slow') 
+    @attr('cpp') 
     def test_complete_with_isotopes(self):
 
         if not self.database_available: return
@@ -287,6 +289,7 @@ class Test_collider_mysql(unittest.TestCase):
         self.assertEqual( mycollider.non_unique_count,  71)
         self.assertEqual( mycollider.total_count, 12502 )
 
+@attr('sqlite') 
 class Test_collider_sqlite(unittest.TestCase):
 
     def setUp(self):
@@ -322,7 +325,7 @@ class Test_collider_sqlite(unittest.TestCase):
     def tearDown(self):
       self.db.close()
 
-    @check_cgetnonuis_availability
+    @attr('cpp')
     def test_1(self):
 
         if not self.database_available: return

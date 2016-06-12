@@ -7,12 +7,13 @@ This file tests the functionality of the c_getnonuis module.
 import sys
 sys.path.append( '..')
 sys.path.append( '.')
+from nose.plugins.attrib import attr
+
 import collider
 
-from test_shared import ignoreImportError_rangetree, ignoreImportError_cget
 from test_shared import get_non_UIS_from_transitions, getnonuis
-from test_shared import check_cgetnonuis_availability
 from precursor import Precursor
+
 
 try:
     import c_getnonuis
@@ -22,7 +23,7 @@ Module c_getnonuis is not available. Please compile it if you want to use it.
 """, "=" * 75
 
 
-@check_cgetnonuis_availability
+@attr('cpp')
 class Test_cgetnonuis(unittest.TestCase):
 
     def setUp(self):
@@ -397,7 +398,7 @@ class Test_cgetnonuis(unittest.TestCase):
         tuple(transitions), precursors, q3_low, q3_high, par.q3_window, par.ppm)
       self.assertEqual(colldensity, [1916, 1800, 2601, 3127, 4525, 4975, 3155, 3091, 2127, 3494, 4519, 5546, 4505, 4429, 5604])
 
-@check_cgetnonuis_availability
+@attr('cpp')
 class Test_cgetnonuis_get_non_UIS_from_transitions(unittest.TestCase):
     """ Tests the c_getnonuis module over the collider.
 
@@ -462,7 +463,7 @@ class Test_cgetnonuis_get_non_UIS_from_transitions(unittest.TestCase):
             self.assertEqual([len(l) for l in newnon_uis[1:]], test_shared.lennonuis4)
             self.assertEqual(newnon_uis, test_shared.refnonuis4)
 
-@check_cgetnonuis_availability
+@attr('cpp')
 class Test_three_peptide_example(unittest.TestCase): 
 
     """

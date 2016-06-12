@@ -8,7 +8,8 @@ sys.path.extend(['.', '..', '../external/', 'external/'])
 
 import uis_functions
 from collider import thisthirdstrike
-from test_shared import check_cgetnonuis_availability
+
+from nose.plugins.attrib import attr
 
 try: import c_getnonuis
 except ImportError: pass
@@ -92,7 +93,7 @@ class Test_3strikes(unittest.TestCase):
         self.assertTrue((1,3) not in expanded[2])
         self.assertTrue((0,1,2) in expanded[3])
 
-    @check_cgetnonuis_availability
+    @attr('cpp')
     def test_cpp_implementation(self):
         strike3_ssrcalcwindow = 0.3
         ssrcalcvalues  = self.ssrcalcvalues_four_example  

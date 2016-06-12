@@ -7,8 +7,7 @@ This file tests the functionality of the c_rangetree module.
 import sys
 sys.path.extend(['.', '..', '../external/', 'external/'])
 
-from test_shared import ignoreImportError_rangetree
-from test_shared import check_crangetree_availability
+from nose.plugins.attrib import attr
 
 try:
     import c_rangetree
@@ -17,7 +16,7 @@ except ImportError:
 Module c_rangetree is not available. Please compile it if you want to use it.
 """, "=" * 75
 
-@check_crangetree_availability
+@attr('cpp')
 class Test_crangetree(unittest.TestCase):
 
     def setUp(self):

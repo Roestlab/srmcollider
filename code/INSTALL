@@ -25,9 +25,6 @@
  *
 """
 
-The SRMCollider code is organized into a Python module, a C++ module (see
-cpp/README) and a testing module (see test/)
-
 === Installation === 
 {{{
 
@@ -153,7 +150,7 @@ that file:
 
 
 
-The following files from the folder "web_scripts" go the folder "/var/webapps/srmcollider/web_scripts/":
+The following files from the folder "cgi-scripts" go the folder "/var/webapps/srmcollider/web_scripts/":
 - about.html
 - download.html
 - sharedhtml.py
@@ -201,7 +198,7 @@ database=srmcollider
 
 Great, you now have a MySQL server that is configured for the SRMCollider.  The
 script sqltest_tables_setup.py in the test folder is able to fill test data in
-(see action below) and the create_db.py script can add real data.
+(see action below) and the scripts/create_db.py script can add real data.
 
 ==== Setup ==== 
 
@@ -211,7 +208,7 @@ You can set up the collider on a protein fasta file using these commands:
 python scripts/trypsinize.py mygenome.fasta peptides.txt
 ./SSRCalc3.pl --alg 3.0 --source_file peptides.txt --output tsv  --B 1 --A 0  \
         > ssrcalc.out
-python create_db.py --mysql_config=~/.my.cnf.srmcollider --peptide_table=mygenome \
+python scripts/create_db.py --mysql_config=~/.my.cnf.srmcollider --peptide_table=mygenome \
         --tsv_file=ssrcalc.out 
 
 note that you need SSRCalc installed to compute the second step. This script is

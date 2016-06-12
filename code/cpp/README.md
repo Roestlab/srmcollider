@@ -1,26 +1,27 @@
 
 # libSRMCollider
 
-This is a C++ library which is used by the SRMCollider software.
+This is a C++ library which is used by the SRMCollider software which also
+contains Python bindings as the main way to interact with the package. 
 
 To configure, and build run 
 
-$ cmake .
-$ make 
-
+    cmake .
+    make 
 
 All tests are in ./test and in order to run them use
 
-$ make && make test
+    make && make test
 
 All Python extension modules are in ./py and will not be built with cmake.
 Please use the Python setup procedure to achieve this (should be in ..).
 
 # Functionality
 
-The C++ is made out of 5 components
-
-  integratedrun.cpp
+The C++ is made out of 5 components, a combinatorics module, a range tree
+module, a common library, a module for computation of eUIS (extended UIS) and a
+file for integrated runs which pushes most computation down to C++ to gain
+speed.
 
 ## Combinatorics
 
@@ -40,17 +41,17 @@ and query a tree. There are two trees:
 
 The implementations are in the corresponding .cpp file.
 
+## SRMCollider Library
+
+General purpose library functions and data structures are in `srmcolliderLib.h`
+using namespace SRMCollider::Common. These include for example fragment ion mass calculations. 
+The implementations are in the corresponding .cpp file.
+
 ## Extended UIS
 
 Extended UIS can be calculated using `calculate_eUIS.h`, see function
 `calculate_eUIS` for example. The input for the module is a list of RT values
 for each transition to be tested.
-The implementations are in the corresponding .cpp file.
-
-## SRMCollider Library
-
-General purpose library functions and data structures are in `srmcolliderLib.h`
-using namespace SRMCollider::Common. These include for example fragment ion mass calculations. 
 The implementations are in the corresponding .cpp file.
 
 ## Integrated run 
@@ -59,5 +60,21 @@ The functions necessary for an integrated, mostly C++ run are described in
 `integratedrun.h` and use the namespae SRMCollider::IntegratedRun to combine
 the rangetree query and the computation of the non UIS transitions into a single function, 
 `wrap_all_bitwise` or `min_needed`. The implementations are in the corresponding .cpp file.
+
+
+# Python bindings
+
+In the ./py folder, you can find bindings for four of the above modules plus a
+shared python integration library at `py_srmcolliderLib.h`. The common library
+contains some SRMCollider::Common functions as well as SRMCollider::pyToC which
+can convert from C++ to Python data structures and back. The individual bindings are 
+
+- `py_combinations.cpp`
+- `py_getNonUis.cpp`
+- `py_integratedrun.cpp`
+- `py_rangetree.cpp`
+
+Each of these can be compile to an independent Python module using the
+`setup.py` installation script provided with SRMCollider.
 
 

@@ -39,7 +39,7 @@
 #include "rangetree.h"
 
 #include "getNonUis.cpp"
-#include "py_integratedrun.cpp"
+#include "py/py_integratedrun.cpp"
 
 // this should be equivalent to running
 // python run_integrated.py 1999 700 715 --q1_window=1.0 --q3_window=1.0 --ssrcalc_window=10 -p hroest.srmpeptides_yeast --max_uis 5

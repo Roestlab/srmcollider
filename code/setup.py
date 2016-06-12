@@ -86,7 +86,7 @@ setup(name="srmcollider",
     requires=["MySQLdb", "sqlite"],
 
     ext_modules=[
-        Extension("c_combinations", ["cpp/combinations.cpp"],
+        Extension("c_combinations", ["cpp/py/py_combinations.cpp"],
             include_dirs=["./", boost_includedir],
             library_dirs=["./", "/usr/local/lib/python2.6/dist-packages/", boost_libdir],
             libraries = ["boost_python"]

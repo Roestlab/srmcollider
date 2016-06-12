@@ -50,6 +50,22 @@ bool SortIntDoublePairSecond(const std::pair<int,double>& left, const std::pair<
  * checked. The second argument a list of lists which contain the values to be
  * checked, the third argument the window size.
  *
+ * The second list is the main input and contains, for each transition, a
+ * sorted list of the retention time of the interfering peptides. For example,
+ * for three transitions this could look like:
+ *
+ * tr1 = [ 24.0    25.0    26.0   27.0 ]
+ * tr2 = [ 24.7            26.0   27.9 ]
+ * tr3 = [ 24.2    25.1    26.6   28.9 ]
+ *
+ * note that there is one peptide at 26.0 RT which interfers with
+ * both transitions tr1 and tr2. Once you have this list, you can "scan" the
+ * lists in c*k steps where c is the number of transitions and k is the
+ * number of peptides (the length of the lists). You basically have c indices
+ * of which you always increase the one with the lowest RT.  With this you can
+ * answer the question whether there is a "slice" in RT in which n out of t
+ * transitions fall 
+ *
  * The function returns a all the "forbidden" tuples, e.g. tuples of 
  * transitions that are interfering and can thus not be used for an eUIS.
  *
@@ -58,15 +74,15 @@ void calculate_eUIS(std::vector<int>& N, std::vector<std::vector<double> >& c_ss
     double ssrwindow, std::vector<std::vector<int> >& all_nonuis) 
 {
 
-    int M = (int)N.size();
+    int M = (int)N.size(); // M is the numer of transitions
 
     int k, i;
     unsigned int m, n;
     int sumlen = 0;
-    std::vector<int> index; index.resize(M);
+    std::vector<int> index; index.resize(M); // current index
     std::vector<int> sort_idx; sort_idx.resize(M);
     std::vector<bool> discarded_indices; discarded_indices.resize(M);
-    std::vector<double> myssr; myssr.resize(M);
+    std::vector<double> myssr; myssr.resize(M); // current slice
     std::vector< std::pair<int,double> > with_index;
 
     for(int k=0;k<M;k++) index[k] = 0;
@@ -80,7 +96,7 @@ void calculate_eUIS(std::vector<int>& N, std::vector<std::vector<double> >& c_ss
       }
     }
 
-    //# check whether there are any empty ssrcalcvalues
+    // check whether there are any empty lists
     int cnt =0;
     for(k=0; k < M; k++) {
       if(N[k] == 0)
@@ -90,60 +106,76 @@ void calculate_eUIS(std::vector<int>& N, std::vector<std::vector<double> >& c_ss
       }
     }
 
+    // all lists are empty
     if(cnt==M) {return;}
 
-    while(true) {
+    // We do this c * k times (c = nr transitions, k = list lengths) by
+    // advancing one pivot element at a time and thus having each element as
+    // pivot at least once
+    while(true) 
+    {
 
-        for(k=0; k < M; k++) {
+        for(k=0; k < M; k++) 
+        {
           if(!discarded_indices[k])
           {
             myssr[k] = c_ssrcalcvalues[k][ index[k] ];
           }
         }
 
-        // find the pivot element
+        // Find the pivot element (the one with the lowest RT)
         double smin = max_elem;
         int piv_i = -1;
         for(k=0; k < M; k++) 
         {
           if(!discarded_indices[k])
-            if(myssr[k] <= smin) {
+            if(myssr[k] <= smin) 
+            {
               smin = myssr[k];
               piv_i = k;
             }
         }
 
+        // We need the current slice to be sorted but also keep the original
+        // indices to map back to the original.
+        //
+        // Store a list of pairs (index, RT), sort the list by RT and then
+        // store the sorted values (as well as the indices)
         with_index.resize(0);
-        //# we need to sort by we also need to have a map back to retrieve the original!
-        // store them in a pair with the index, sort, retrieve values and index
-        for(k=0; k < M; k++) {
+        for(k=0; k < M; k++) 
+        {
           with_index.push_back(std::make_pair(k,myssr[k]));
         }
         std::stable_sort(with_index.begin(), with_index.end(), SortIntDoublePairSecond);
-        for(k=0; k < M; k++) {
+        for(k=0; k < M; k++) 
+        {
           sort_idx[k] = with_index[k].first;
           myssr[k] = with_index[k].second;
         }
 
-        //# now find all N different combinations that are not UIS. Since they are
-        //# sorted we only need to consider elements that have a higher index.
-        for(k=0; k < M; k++) {
+        // Find all N different combinations that are not UIS. Since they are
+        // sorted, for each element we only need to consider elements that have
+        // a higher index.
+        for(k=0; k < M; k++) 
+        {
           if(discarded_indices[sort_idx[k]]) continue;
 
           std::vector<int> nonuis;
           nonuis.push_back(sort_idx[k]);
 
+          // Look at all elements with a higher index and add them to the
+          // current non UIS list if they are within the RT window
           for(i=k+1; i < M; i++) 
           {
-              if(discarded_indices[sort_idx[i]]) continue;
-              if(!(std::fabs(myssr[k] - myssr[i]) > ssrwindow))
-              {
-                nonuis.push_back(sort_idx[i]);
-              }
+            if(discarded_indices[sort_idx[i]]) continue;
+            if(!(std::fabs(myssr[k] - myssr[i]) > ssrwindow))
+            {
+              nonuis.push_back(sort_idx[i]);
+            }
           }
 
-          // here we have to figure out whether we want to append it (e.g. if
-          // it is not yet present).
+          // Append the new set of transitions as non UIS if they are not yet
+          // present in the result. 
           std::sort(nonuis.begin(), nonuis.end());
           bool is_present = false;
           bool this_not_present = true;
@@ -152,15 +184,16 @@ void calculate_eUIS(std::vector<int>& N, std::vector<std::vector<double> >& c_ss
             this_not_present = false;
             for(n=0; n<all_nonuis[m].size() and n < nonuis.size(); n++)
             {
-                if(nonuis[n] != all_nonuis[m][n])
-                {
-                  this_not_present = true; break;
-                }
+              if(nonuis[n] != all_nonuis[m][n])
+              {
+                this_not_present = true; break;
+              }
             }
             if(all_nonuis[m].size() != nonuis.size()) {this_not_present = true;}
 
             //cout << " compared " << m << endl;
-            if(!this_not_present) {
+            if(!this_not_present) 
+            {
               is_present = true; 
               break;
             }
@@ -173,18 +206,21 @@ void calculate_eUIS(std::vector<int>& N, std::vector<std::vector<double> >& c_ss
           }
         }
 
-        //# Advance the pivot element
+        // Advance the pivot element
         index[piv_i] += 1;
+
+        // Catch case if we advanced it beyond the end of the list and check
+        // whether we have any transition lists left (or all pivots have been
+        // advanced beyond the end) -> if so, we terminate
         if(index[piv_i] >= N[piv_i])
         {
-            discarded_indices[ piv_i ] = true;
-            int dcount = 0;
-            while(dcount < M && discarded_indices[dcount]) dcount++;
-            if(dcount >= M)
-                break;
+          discarded_indices[ piv_i ] = true;
+          int dcount = 0;
+          while(dcount < M && discarded_indices[dcount]) dcount++;
+          if(dcount >= M)
+              break;
         }
-
-    }
+    } // end of while(true)
     return;
 }
 

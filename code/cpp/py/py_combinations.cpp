@@ -29,11 +29,11 @@
  * PYTHON interface
 */
 
+#include "../combinations.cpp"
+
 #include <boost/python.hpp>
 #include <boost/python/module.hpp>
 #include <boost/python/def.hpp>
-
-#include "../combinations.cpp"
 
 void _combinations_wrapper(int M, int N, const char* filename,
         boost::python::list mapping,

@@ -46,6 +46,26 @@
 //
 int main(int argc, const char ** argv)
 {
+  python::list precursors_to_evaluate;
+  double isotope_correction;
+  python::object par; // parameter object
+  SRMCollider::ExtendedRangetree::Rangetree_Q1_RT rangetree;
+  SRMParameters params;
+
+  std::string table_name = "hroest.srmPeptides_yeast";
+  std::string mysql_config = "~/.my.cnf";
+
+  double min_q1 = 700; 
+  double max_q1 = 715; 
+  double q1_window = 1.0/2.0;
+  double q3_window = 1.0/2.0;
+  double ssrcalc_window = 10/2.0;
+  int max_uis = 5;
+  int max_nr_isotopes = 3;
+  bool ppm = false;
+  double q3_lower = 400;
+  double q3_upper = 1400;
+
   try {
 
 
@@ -69,22 +89,13 @@ int main(int argc, const char ** argv)
   python::object precursor = boost::python::import("precursor");
   python::object collider = boost::python::import("collider");
   python::object MySQLdb = boost::python::import("MySQLdb");
-  python::object par = collider.attr("SRM_parameters")();
+  par = collider.attr("SRM_parameters")();
   std::cout << "Imported all the modules successfully, trying to get a db cusor..." << std::endl;
 
-  double min_q1 = 700; 
-  double max_q1 = 715; 
-  double q1_window = 1.0/2.0;
-  double q3_window = 1.0/2.0;
-  double ssrcalc_window = 10/2.0;
-  int max_uis = 5;
-  int max_nr_isotopes = 3;
-  bool ppm = false;
-
-  ignored = par.attr("set_single_peptide_table")("hroest.srmPeptides_yeast");
-  ignored = par.attr("set_q3_range")(400, 1400);
+  ignored = par.attr("set_single_peptide_table")(table_name);
+  ignored = par.attr("set_q3_range")(q3_lower, q3_upper);
   ignored = par.attr("set_default_vars")();
-  ignored = par.attr("set_mysql_config")("~/.my.cnf");
+  ignored = par.attr("set_mysql_config")(mysql_config);
   python::object db = par.attr("get_db")();
   python::object cursor = db.attr("cursor")();
   std::cout << "Got a db cursor, trying to get precursors from the db..." << std::endl;
@@ -93,17 +104,15 @@ int main(int argc, const char ** argv)
   myprecursors.attr("getFromDB")(par, cursor, min_q1 - q1_window, max_q1 + q1_window);
   std::cout << "Got all precursors from the db, trying to build a rangetree..." << std::endl;
 
-  python::list precursors_to_evaluate = python::extract<python::list>(myprecursors.attr("getPrecursorsToEvaluate")(min_q1, max_q1));
-  double isotope_correction = python::extract<double>(par.attr("calculate_isotope_correction")());
+  precursors_to_evaluate = python::extract<python::list>(myprecursors.attr("getPrecursorsToEvaluate")(min_q1, max_q1));
+  isotope_correction = python::extract<double>(par.attr("calculate_isotope_correction")());
   //python::object r_tree = myprecursors.attr("build_extended_rangetree")();
 
   python::tuple alltuples = python::extract<python::tuple>(myprecursors.attr("get_alltuples_extended_rangetree")());
-  SRMCollider::ExtendedRangetree::Rangetree_Q1_RT rangetree;
   rangetree.new_rangetree();
   rangetree.create_tree(alltuples);
   std::cout << "Built a rangetree, starting calculations..." << std::endl;
 
-  SRMParameters params;
   SRMCollider::pyToC::initialize_param_obj(par, params);
   params.q3_window = q3_window;
   params.ppm = false;

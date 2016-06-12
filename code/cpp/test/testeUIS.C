@@ -26,17 +26,16 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE MyTest
  
+// SRMCollider Lib
+#include <srmcollider.h>
+#include <srmcolliderLib.h>
+#include "calculate_eUIS.h"
+
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-//include our own libraries
-#include "srmcollider.h"
-#include "srmcolliderLib.h"
-
 void calculate_eUIS(std::vector<int>& N, std::vector<std::vector<double> >& c_ssrcalcvalues,
     double ssrwindow, std::vector<std::vector<int> >& all_nonuis);
-
-#include "calculate_eUIS.cpp"
 
 #define EPS_05 boost::test_tools::fraction_tolerance(1.e-5) 
  

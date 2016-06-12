@@ -23,6 +23,17 @@
  *
  */
 
+// SRMCollider Lib
+#include <srmcollider.h>
+#include <srmcolliderLib.h>
+#include <combinatorics.h>
+#include <integratedrun.h>
+#include <rangetree.h>
+
+// We dont make a library out of these ... 
+#include <py/getNonUis.cpp>
+#include <py/py_integratedrun.cpp>
+
 // Including headers from CGAL 
 #include <CGAL/Cartesian.h>
 #include <CGAL/Range_segment_tree_traits.h>
@@ -31,40 +42,19 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 
-//include our own libraries
-#include "srmcollider.h"
-#include "srmcolliderLib.h"
-#include "combinatorics.h"
-#include "integratedrun.h"
-#include "rangetree.h"
-
-#include "getNonUis.cpp"
-#include "py_integratedrun.cpp"
-
 // this should be equivalent to running
 // python run_integrated.py 1999 700 715 --q1_window=1.0 --q3_window=1.0 --ssrcalc_window=10 -p hroest.srmpeptides_yeast --max_uis 5
 //
 int main(int argc, const char ** argv)
 {
+  python::list precursors_to_evaluate;
+  double isotope_correction;
+  python::object par; // parameter object
+  SRMCollider::ExtendedRangetree::Rangetree_Q1_RT rangetree;
+  SRMParameters params;
 
-  Py_Initialize();
-
-  // now time to insert the current working directory into the python path so module search can take advantage
-  // this must happen after python has been initialised
-  boost::filesystem::path workingDir = boost::filesystem3::complete("./").normalize();
-  // TODO use filesystem or filesystem3
-  PyObject* sysPath = PySys_GetObject("path");
-  PyList_Insert( sysPath, 0, PyString_FromString(workingDir.string().c_str()));
-
-  python::object ignored;
-
-  std::cout << "Will try to import all the modules" << std::endl;
-  python::object mMainModule = python::import("__main__");
-  python::object precursor = boost::python::import("precursor");
-  python::object collider = boost::python::import("collider");
-  python::object MySQLdb = boost::python::import("MySQLdb");
-  python::object par = collider.attr("SRM_parameters")();
-  std::cout << "Imported all the modules successfully, trying to get a db cusor..." << std::endl;
+  std::string table_name = "hroest.srmPeptides_yeast";
+  std::string mysql_config = "~/.my.cnf";
 
   double min_q1 = 700; 
   double max_q1 = 715; 
@@ -74,11 +64,39 @@ int main(int argc, const char ** argv)
   int max_uis = 5;
   int max_nr_isotopes = 3;
   bool ppm = false;
+  double q3_lower = 400;
+  double q3_upper = 1400;
 
-  ignored = par.attr("set_single_peptide_table")("hroest.srmPeptides_yeast");
-  ignored = par.attr("set_q3_range")(400, 1400);
+  try {
+
+
+  Py_Initialize();
+
+  // now time to insert the current working directory into the Python search
+  // path so module search can take advantage.  This must happen after Python
+  // has been initialised
+  boost::filesystem::path workingDir = boost::filesystem3::complete("./").normalize();
+  // TODO use filesystem or filesystem3
+  PyObject* sysPath = PySys_GetObject("path");
+  PyList_Insert( sysPath, 0, PyString_FromString(workingDir.string().c_str()));
+
+  workingDir = boost::filesystem3::complete("../").normalize();
+  PyList_Insert( sysPath, 0, PyString_FromString(workingDir.string().c_str()));
+
+  python::object ignored;
+
+  std::cout << "Will try to import all the modules" << std::endl;
+  python::object mMainModule = python::import("__main__");
+  python::object precursor = boost::python::import("precursor");
+  python::object collider = boost::python::import("collider");
+  python::object MySQLdb = boost::python::import("MySQLdb");
+  par = collider.attr("SRM_parameters")();
+  std::cout << "Imported all the modules successfully, trying to get a db cusor..." << std::endl;
+
+  ignored = par.attr("set_single_peptide_table")(table_name);
+  ignored = par.attr("set_q3_range")(q3_lower, q3_upper);
   ignored = par.attr("set_default_vars")();
-  ignored = par.attr("set_mysql_config")("~/.my.cnf");
+  ignored = par.attr("set_mysql_config")(mysql_config);
   python::object db = par.attr("get_db")();
   python::object cursor = db.attr("cursor")();
   std::cout << "Got a db cursor, trying to get precursors from the db..." << std::endl;
@@ -87,20 +105,24 @@ int main(int argc, const char ** argv)
   myprecursors.attr("getFromDB")(par, cursor, min_q1 - q1_window, max_q1 + q1_window);
   std::cout << "Got all precursors from the db, trying to build a rangetree..." << std::endl;
 
-  python::list precursors_to_evaluate = python::extract<python::list>(myprecursors.attr("getPrecursorsToEvaluate")(min_q1, max_q1));
-  double isotope_correction = python::extract<double>(par.attr("calculate_isotope_correction")());
+  precursors_to_evaluate = python::extract<python::list>(myprecursors.attr("getPrecursorsToEvaluate")(min_q1, max_q1));
+  isotope_correction = python::extract<double>(par.attr("calculate_isotope_correction")());
   //python::object r_tree = myprecursors.attr("build_extended_rangetree")();
 
   python::tuple alltuples = python::extract<python::tuple>(myprecursors.attr("get_alltuples_extended_rangetree")());
-  SRMCollider::ExtendedRangetree::Rangetree_Q1_RT rangetree;
   rangetree.new_rangetree();
   rangetree.create_tree(alltuples);
   std::cout << "Built a rangetree, starting calculations..." << std::endl;
 
-  SRMParameters params;
   SRMCollider::pyToC::initialize_param_obj(par, params);
   params.q3_window = q3_window;
   params.ppm = false;
+
+  }
+  // Catch any Python errors during set up and print them ...
+  catch (python::error_already_set) {
+    PyErr_Print();
+  }
 
   for (int i = 0; i < precursors_to_evaluate.attr("__len__")(); i++)
   {

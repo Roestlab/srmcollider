@@ -11,6 +11,7 @@ sys.path.append( '.')
 sys.path.append( '..')
 sys.path.append( '../external')
 import collider
+from nose.plugins.attrib import attr
 
 from test_shared import *
 import test_shared 
@@ -24,7 +25,7 @@ except ImportError:
 Module c_integrated is not available. Please compile it if you want to use it.
 """, "=" * 75
 
-@check_cintegrated_availability
+@attr('cpp')
 class Test_cintegrated(unittest.TestCase): 
 
     def setUp(self):

@@ -10,47 +10,6 @@ script_dirname = os.path.dirname(os.path.abspath(__file__))
 PEPTIDE_TABLE_NAME = "srmPeptides_test"
 USE_SQLITE = True
 
-def ignoreImportError_rangetree(f):
-    def new(*args):
-        try:
-            import c_rangetree
-            return f(*args)
-        except ImportError: pass
-    return new
-
-def ignoreImportError_cget(f):
-    def new(*args):
-        try:
-            import c_getnonuis
-            return f(*args)
-        except ImportError: pass
-    return new
-
-def dummy(): 
-    pass
-def check_cgetnonuis_availability(function):
-    try:
-        import c_getnonuis
-        return function
-    except ImportError:
-        return dummy
-
-def check_crangetree_availability(function):
-    try:
-        import c_rangetree
-        return function
-    except ImportError:
-        return dummy
-
-def check_cintegrated_availability(function):
-    try:
-        import c_integrated
-        return function
-    except ImportError:
-        return dummy
-
-
-
 from precursor import Precursor
 class ThreePeptideExample():
 

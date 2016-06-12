@@ -12,11 +12,13 @@ PEPTIDE_TABLE_NAME = "srmPeptides_test"
 USE_SQLITE = True
 
 import test_shared 
-from test_shared import check_crangetree_availability, transitions_def1, collisions_def1
+from test_shared import transitions_def1, collisions_def1
 from Residues import Residues
 from precursor import Precursors
 
-@check_crangetree_availability
+from nose.plugins.attrib import attr
+
+@attr('cpp')
 class Test_integration_run_uis(unittest.TestCase): 
 
   def setUp(self):

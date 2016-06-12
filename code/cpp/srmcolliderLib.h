@@ -23,10 +23,13 @@
  *
  */
 
-//include our own libraries
 #ifndef SRMCOLLIDERLIB_H
 #define SRMCOLLIDERLIB_H
-#include "srmcollider.h"
+
+// SRMCollider Lib
+#include <srmcollider.h>
+
+// include STL 
 #include <vector>
 #include <string>
 

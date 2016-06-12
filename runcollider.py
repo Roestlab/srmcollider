@@ -45,10 +45,13 @@ Example Workflow:
 }}}
 """
 
+# All needed Python code lives in ./code so we need to append that to the path
 import MySQLdb, sys, csv, time
 sys.path.append('code')
-import collider, progress, precursor; from Residues import Residues
-#from code import collider, Residues, progress
+import collider, progress, precursor 
+from Residues import Residues
+# File parsing routines
+from Fileparser import parse_srmatlas_file, parse_mprophet_resultfile, parse_mprophet_methodfile, parse_peptidelist
 
 # some options that can be changed locally for your convenience
 default_mysql = "~/.my.cnf.srmcollider"
@@ -170,9 +173,6 @@ except Exception:
 ###########################################################################
 # }}}
 ###########################################################################
-
-# File parsing routines
-from Fileparser import parse_srmatlas_file, parse_mprophet_resultfile, parse_mprophet_methodfile, parse_peptidelist
 
 # here we parse the files
 # {{{

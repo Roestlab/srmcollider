@@ -33,12 +33,16 @@
  * Furthermore, we provide interfaces for some of the shared library functions.
 */
 
+
+// SRMCollider Lib
+#include <srmcollider.h>
+#include <srmcolliderLib.cpp>
+#include <py/py_srmcolliderLib.h>
+#include <combinatorics.h>
+#include <calculate_eUIS.cpp>
+
+// STL libs
 #include <vector>
-//include our own libraries
-#include "srmcollider.h"
-#include "srmcolliderLib.cpp"
-#include "py_srmcolliderLib.h"
-#include "combinatorics.h"
 
 // Boost.Python headers
 #include <boost/python.hpp>
@@ -46,7 +50,6 @@
 #include <boost/python/def.hpp>
 namespace python = boost::python;
 
-#include "calculate_eUIS.cpp"
 
 //using namespace std;
 

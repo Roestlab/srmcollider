@@ -28,7 +28,6 @@
  * retrieve precursor values from it. There are two functions: build tree and
  * query tree.
  *
- *
  * To install CGAL:
  *
  * sudo apt-get install libcgal-dev 
@@ -42,11 +41,14 @@
 #ifndef SRMCOLLIDER_RANGETREE_H
 #define SRMCOLLIDER_RANGETREE_H
 
+// SRMCollider Lib
+#include <srmcollider.h>
+#include <srmcolliderLib.h>
+
 // Boost.Python headers
 #include <boost/python.hpp>
 #include <boost/python/module.hpp>
 #include <boost/python/def.hpp>
-namespace python = boost::python;
 
 #include <boost/shared_ptr.hpp>
 
@@ -56,10 +58,6 @@ namespace python = boost::python;
 #include <CGAL/Range_tree_k.h>
 
 #include <vector>
-
-//include our own libraries
-#include "srmcollider.h"
-#include "srmcolliderLib.h"
 
 namespace SRMCollider
 {
@@ -98,7 +96,7 @@ namespace SRMCollider
        *   4 - q1
        *   5 - ssrcalc
       */
-      void create_tree(python::tuple pepids);
+      void create_tree(boost::python::tuple pepids);
 
       /* Query the rangetree. Format is (x1,y1,x2,y2), returns all entries that are
        * in the defined square defined by these four numbers.
@@ -113,7 +111,7 @@ namespace SRMCollider
        * The isotope correction should be computed as:
        *    nr_isotopes_to_consider * mass_difference_of_C13 / minimal_parent_charge
       */
-      python::list query_tree(double a, double b, double c, double d, int max_nr_isotopes, double correction);
+      boost::python::list query_tree(double a, double b, double c, double d, int max_nr_isotopes, double correction);
 
       boost::shared_ptr<Range_tree_2_type> my_rangetree;
     };
@@ -128,7 +126,7 @@ namespace SRMCollider
      *   4 - q1
      *   5 - ssrcalc
     */
-    void create_tree(python::tuple pepids);
+    void create_tree(boost::python::tuple pepids);
 
     /* Query the rangetree. Format is (x1,y1,x2,y2), returns all entries that are
      * in the defined square defined by these four numbers.
@@ -143,7 +141,7 @@ namespace SRMCollider
      * The isotope correction should be computed as:
      *    nr_isotopes_to_consider * mass_difference_of_C13 / minimal_parent_charge
     */
-    python::list query_tree(double a, double b, double c, double d, int max_nr_isotopes, double correction);
+    boost::python::list query_tree(double a, double b, double c, double d, int max_nr_isotopes, double correction);
   }
 
   namespace ExtendedRangetree
@@ -174,7 +172,7 @@ namespace SRMCollider
       void new_rangetree ();
 
       // Create the rangetree that will be used throughout. This is essential
-      void create_tree(python::tuple pepids);
+      void create_tree(boost::python::tuple pepids);
 
       void create_tree(std::vector<Precursor> precursors);
 
@@ -191,7 +189,7 @@ namespace SRMCollider
        * The isotope correction should be computed as:
        *    nr_isotopes_to_consider * mass_difference_of_C13 / minimal_parent_charge
       */
-      python::list query_tree(double a, double b, double c, double d, int max_nr_isotopes, double correction);
+      boost::python::list query_tree(double a, double b, double c, double d, int max_nr_isotopes, double correction);
       std::vector< Precursor* > query_tree_c(double a, double b, double c, double d, int max_nr_isotopes, double correction);
 
       boost::shared_ptr<Range_tree_2_type> my_rangetree;

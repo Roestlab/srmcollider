@@ -15,5 +15,11 @@ Röst H, Malmström L, Aebersold R. A computational tool to detect and avoid red
 
 Further Instructions
 ------------
-For installation instructions, see code/README
+For installation instructions, see [here](code/INSTALL) and for more
+information see [here](code/README.md).
+
+Running
+-------
+The runcollider.py is the most generic way to run the collider for individual
+files. For other ways to run the code, see [here](code/README.md).
 

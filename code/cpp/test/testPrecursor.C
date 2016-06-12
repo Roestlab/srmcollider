@@ -28,11 +28,11 @@
 #include <boost/test/unit_test.hpp>
 #define EPS_05 boost::test_tools::fraction_tolerance(1.e-5) 
 
-#include <iostream>
+// SRMCollider Lib
+#include <srmcollider.h>
+#include <srmcolliderLib.h>
 
-//include our own libraries
-#include "srmcollider.h"
-#include "srmcolliderLib.h"
+#include <iostream>
 
 using namespace SRMCollider::Common;
 using namespace std;

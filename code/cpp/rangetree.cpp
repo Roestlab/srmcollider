@@ -23,27 +23,13 @@
  *
  */
 
-/*
- * This file has the abstraction layer to make calls to the CGAL rangetree and
- * retrieve precursor values from it. There are two functions: build tree and
- * query tree.
- *
- *
- * To install CGAL:
- *
- * sudo apt-get install libcgal-dev 
- * g++ -frounding-math -lCGAL -O3 rangetree.cpp 
- * http://www.cgal.org/Manual/latest/doc_html/cgal_manual/SearchStructures/Chapter_main.html
- * http://graphics.stanford.edu/courses/cs368-00-spring/TA/manuals/CGAL/ref-manual2/SearchStructures/Chapter_main.html
- * Q Public Licence http://www.gnu.org/licenses/license-list.html
- * http://www.cgal.org/Manual/latest/doc_html/cgal_manual/packages.html#part_XIII
-*/
-
 #ifndef SRMCOLLIDER_RANGETREE_C
 #define SRMCOLLIDER_RANGETREE_C
 
-//include our own libraries
-#include "rangetree.h"
+// SRMCollider Lib
+#include <rangetree.h>
+
+namespace python = boost::python;
 
 namespace SRMCollider
 {

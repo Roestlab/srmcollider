@@ -26,13 +26,10 @@
 //include our own libraries
 #ifndef COMBINATORICS_H
 #define COMBINATORICS_H
-#include "srmcollider.h"
+#include <srmcollider.h>
 
 #include <vector>
 #include <set>
-#include <stdint.h>
-
-//using namespace std;
 
 namespace SRMCollider 
 {
@@ -262,7 +259,7 @@ namespace SRMCollider
         std::vector<int> index = result_vec[i];
 
         //EVALUATE THE RESULT
-        //only works for M up to order 5
+        //only works for M up to order 10
         switch(M) {
             case 1: tmptuple = python::make_tuple( mapping[index[0]] ); break;
             case 2: tmptuple = python::make_tuple( mapping[index[0]], mapping[index[1]]); break;
@@ -340,53 +337,54 @@ namespace SRMCollider
     python::dict get_non_uis(python::dict collisions_per_peptide, int order) 
     {
 
-        python::list tmplist;
-        python::list pepcollisions = python::extract< python::list >(
-                collisions_per_peptide.values() );
-        python::dict result;
+      python::list tmplist;
+      python::list pepcollisions = python::extract< python::list >(
+              collisions_per_peptide.values() );
+      python::dict result;
 
-        int tmp_length;
-        int collision_length = python::extract<int>(pepcollisions.attr("__len__")());
+      int tmp_length;
+      int collision_length = python::extract<int>(pepcollisions.attr("__len__")());
 
-        for (int i=0; i<collision_length; i++) {
-            tmplist = python::extract< python::list >( pepcollisions[i] );
-            tmp_length = python::extract<int>(tmplist.attr("__len__")());
-            _py_combinations(order, tmp_length, tmplist, result);
-        }
+      for (int i=0; i<collision_length; i++) 
+      {
+        tmplist = python::extract< python::list >( pepcollisions[i] );
+        tmp_length = python::extract<int>(tmplist.attr("__len__")());
+        _py_combinations(order, tmp_length, tmplist, result);
+      }
 
-        return result;
+      return result;
 
-        /* This above get_non_uis and _combinations functions 
-         * correspond to the following python function (roughly)
-         * 
+      /* This above get_non_uis and _combinations functions 
+       * correspond to the following python function (roughly)
+       * 
 
-            for pepc in collisions_per_peptide.values():
-                for i in range(1,MAX_UIS+1):
-                    if len( pepc ) >= i: 
-                        tmp = [ [pepc[j] for j in indices] for indices in 
-                            _combinations( len(pepc) , i)] 
-                        non_uis.update( [tuple(sorted(p)) for p in combinations(pepc, i)] )
-            return non_uis_list
+          for pepc in collisions_per_peptide.values():
+              for i in range(1,MAX_UIS+1):
+                  if len( pepc ) >= i: 
+                      tmp = [ [pepc[j] for j in indices] for indices in 
+                          _combinations( len(pepc) , i)] 
+                      non_uis.update( [tuple(sorted(p)) for p in combinations(pepc, i)] )
+          return non_uis_list
 
-            def _combinations(N, M):
-                """All index combinations of M elements drawn without replacement
-                 from a set of N elements.
-                Order of elements does NOT matter."""
-                index = range( M )
-                while index[0] <= N-M:
-                    yield index[:]
-                    index[ M-1 ] += 1
-                    if index[ M-1 ] >= N:
-                        #now we hit the end, need to increment other positions than last
-                        #the last position may reach N-1, the second last only N-2 etc.
-                        j = M-1
-                        while j >= 0 and index[j] >= N-M+j: j -= 1
-                        #j contains the value of the index that needs to be incremented
-                        index[j] += 1
-                        k = j + 1
-                        while k < M: index[k] = index[k-1] + 1; k += 1; 
+          def _combinations(N, M):
+              """All index combinations of M elements drawn without replacement
+               from a set of N elements.
+              Order of elements does NOT matter."""
+              index = range( M )
+              while index[0] <= N-M:
+                  yield index[:]
+                  index[ M-1 ] += 1
+                  if index[ M-1 ] >= N:
+                      #now we hit the end, need to increment other positions than last
+                      #the last position may reach N-1, the second last only N-2 etc.
+                      j = M-1
+                      while j >= 0 and index[j] >= N-M+j: j -= 1
+                      #j contains the value of the index that needs to be incremented
+                      index[j] += 1
+                      k = j + 1
+                      while k < M: index[k] = index[k-1] + 1; k += 1; 
 
-        */
+      */
 
     }
 

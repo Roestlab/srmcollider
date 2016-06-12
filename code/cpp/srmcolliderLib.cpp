@@ -26,7 +26,8 @@
 //include our own libraries
 #ifndef SRMCOLLIDERLIB_C
 #define SRMCOLLIDERLIB_C
-#include "srmcolliderLib.h"
+
+#include <srmcolliderLib.h>
 
 namespace SRMCollider 
 {

@@ -24,15 +24,15 @@
  */
 
 // SRMCollider Lib
-#include "srmcollider.h"
-#include "srmcolliderLib.h"
-#include "combinatorics.h"
-#include "integratedrun.h"
-#include "rangetree.h"
+#include <srmcollider.h>
+#include <srmcolliderLib.h>
+#include <combinatorics.h>
+#include <integratedrun.h>
+#include <rangetree.h>
 
-#include "py/getNonUis.cpp"
-#include "py/py_integratedrun.cpp"
-
+// We dont make a library out of these ... 
+#include <py/getNonUis.cpp>
+#include <py/py_integratedrun.cpp>
 
 // Including headers from CGAL 
 #include <CGAL/Cartesian.h>

@@ -23,37 +23,17 @@
  *
  */
 
-/*
- * This file contains functions that allow the user to execute one calculation
- * of UIS or minimal number of transitions needed for a peptide with one call.
- * This means that instead of calling several functions after each other and
- * passing data structures between Python and Cpp, all can be done in Cpp which
- * is faster.
- *
- * Thus it combines the functionality of rangetree.cpp and getNonUis.cpp in one.
- *
-*/
-
 #ifndef SRMCOLLIDER_INTEGRATED_C
 #define SRMCOLLIDER_INTEGRATED_C
 
-//include our own libraries
-#include "srmcollider.h"
-#include "rangetree.h"
-#include "combinatorics.h"
-#include "srmcolliderLib.h"
-
-#include <vector>
+#include <integratedrun.h>
 
 using namespace SRMCollider::Common;
-//using namespace std;
 
 namespace SRMCollider 
 {
   namespace IntegratedRun 
   {
-
-    typedef SRMCollider::Common::SRMTransition Transition;
 
     inline void _charged_interference(const std::string& sequence, double* tmp_series, double* series, const int ch,
         const SRMParameters& params, const int isotope_modification, 
@@ -119,15 +99,6 @@ namespace SRMCollider
 
     }
 
-  /* 
-   * Calculate the minimally needed number of transitions needed to get a UIS
-   * given transitions in their preferred order and interfering precursors.
-   *
-   * Uses integers with bitflags to store the combinations, thus the number of
-   * transitions that can be considered is limited by COMBLIMIT.  Also note that
-   * the leftmost bit needs to be set to zero all the time, otherwise an infinte
-   * loop occurs, thus there is one bit we cannot use.
-  */
   int min_needed(std::vector<Transition>& mytransitions, std::vector<SRMPrecursor>& precursors,
       int max_uis, double q3window, bool ppm, SRMParameters& params)
   {
@@ -184,33 +155,6 @@ namespace SRMCollider
       return maxoverlap;
   }
 
-  /*
-   * Computes a list of interferences for the given input peptide. 
-   *
-   * The interferences are stored in the output vector newcollperpep and are
-   * encoded as integer of size COMBINT where, for each entry, 0 means absence
-   * of interference and 1 means presence of interference.
-   *
-   * Given the transitions and then four numbers giving the coordinate window in
-   * which the precursors should be found: 
-   *
-   *   q1_low, ssrcalc_low, q1_high, ssrcalc_high, 
-   *
-   * Also the peptide key of the current peptide has to be given (to exclude it)
-   * as well as the maximal order of UIS to compute, the used q3 window and
-   * whether the q3 window is given in ppm (parts per million), default unit is
-   * Th which is m/z
-   *
-   * This function uses "bitwise operations" to speed up the calculation: each combination of
-   * transitions is encoded in an integer, which allows easy storage and
-   * computation by bitshifts even though the code gets less easy to understand.
-   * The default length of the integer is 32 bits thus we can at most handle
-   * combinations for 31 transitions; if more are needed one needs to change
-   * COMBINT to an integer format that uses more bits, e.g. unit64_t or even the
-   * BigInt class for larger integers.
-   * If there are more transitions provided than allowed, an error will be
-   * thrown. 
-  */
   void wrap_all_bitwise(std::vector<Transition>& mytransitions, double a, double b,
     double c, double d, long thistransitiongr, int max_uis, double q3window,
     bool ppm, int max_nr_isotopes, double isotope_correction, SRMParameters& params,

@@ -26,14 +26,14 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE MyTest
  
+// SRMCollider Lib
+#include <srmcollider.h>
+#include <srmcolliderLib.h>
+
+#include <py/getNonUis.cpp>
+
 #include <boost/test/unit_test.hpp>
 #include <iostream>
-
-//include our own libraries
-#include "srmcollider.h"
-#include "srmcolliderLib.h"
-
-#include "getNonUis.cpp"
 
 #define EPS_05 boost::test_tools::fraction_tolerance(1.e-5) 
 

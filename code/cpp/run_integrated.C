@@ -23,6 +23,17 @@
  *
  */
 
+// SRMCollider Lib
+#include "srmcollider.h"
+#include "srmcolliderLib.h"
+#include "combinatorics.h"
+#include "integratedrun.h"
+#include "rangetree.h"
+
+#include "py/getNonUis.cpp"
+#include "py/py_integratedrun.cpp"
+
+
 // Including headers from CGAL 
 #include <CGAL/Cartesian.h>
 #include <CGAL/Range_segment_tree_traits.h>
@@ -30,16 +41,6 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
-
-//include our own libraries
-#include "srmcollider.h"
-#include "srmcolliderLib.h"
-#include "combinatorics.h"
-#include "integratedrun.h"
-#include "rangetree.h"
-
-#include "getNonUis.cpp"
-#include "py/py_integratedrun.cpp"
 
 // this should be equivalent to running
 // python run_integrated.py 1999 700 715 --q1_window=1.0 --q3_window=1.0 --ssrcalc_window=10 -p hroest.srmpeptides_yeast --max_uis 5

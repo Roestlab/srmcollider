@@ -29,7 +29,8 @@
  * PYTHON interface
 */
 
-#include "../combinations.cpp"
+// SRMCollider Lib
+#include <combinations.cpp>
 
 #include <boost/python.hpp>
 #include <boost/python/module.hpp>

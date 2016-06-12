@@ -37,7 +37,7 @@
 //include our own libraries
 #include "srmcollider.h"
 #include "srmcolliderLib.cpp"
-#include "py_srmcolliderLib.h"
+#include "py/py_srmcolliderLib.h"
 #include "combinatorics.h"
 
 // Boost.Python headers

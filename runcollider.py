@@ -89,6 +89,15 @@ group.add_option("--csv", dest="csv", default=False, action='store_true',
 All other fields except 'protein_name' are ignored.
 """
                 )
+group.add_option("--library_format", dest="library_format", default="sptxt",
+    help="""The format in which the library is provided (options are 'sptxt', 'mprophet', 'srmatlas', 'peplist').
+                 sptxt is a _text_ based library in sptxt format from SpectraST, mprophet is a csv file containg the fields 
+                 'ModifiedSequence', 'PrecursorCharge', 'PeptideSequence', 'PrecursorMz', 'LibraryIntensity', 'ProductMz'. 
+                 srmatlas is a file downloaded from the SRMAtlas webpage and peplist is a simple list of peptides _without_ transition
+                 information.""" )
+group.add_option("--peplist_transitions", dest="peplist_transitions", default=3, type="int",
+    help="Number of transitions to use from the peptides in the peptie list (y ions above the precursor will be used)" +
+    "Defaults to 3." , metavar='3')
 group.add_option("--srmatlas_tsv", dest="srmatlas_tsv", default=False, action='store_true',
     help="""The file passed as the first option is a srmatlas style tsv file
     The format is one header line and then the following fields: Protein, Pre
@@ -163,11 +172,11 @@ except Exception:
 ###########################################################################
 
 # File parsing routines
-from Fileparser import parse_srmatlas_file, parse_mprophet_resultfile, parse_mprophet_methodfile
+from Fileparser import parse_srmatlas_file, parse_mprophet_resultfile, parse_mprophet_methodfile, parse_peptidelist
 
 # here we parse the files
 # {{{
-if not options.csv and not options.srmatlas_tsv:
+if not options.csv and not options.srmatlas_tsv and options.library_format == "sptxt":
     import speclib_db_lib
     sptxt = libfile + ".splib"
     pepidx = libfile + ".pepidx"
@@ -186,16 +195,21 @@ if not options.csv and not options.srmatlas_tsv:
     library_key = 4242 
     library = speclib_db_lib.Library(library_key)
     library.read_sptxt_pepidx( sptxt, pepidx, library_key )
-elif options.csv: 
+elif options.csv or options.library_format == "mprophet" : 
     print "Experiment Type"
     print ' '*5, 'Check transitions from a csv transitions list with'
     file_used = libfile
     library = parse_mprophet_methodfile(libfile)
-elif options.srmatlas_tsv: 
+elif options.srmatlas_tsv or options.library_format == "srmatlas": 
     print "Experiment Type"
     print ' '*5, 'Check transitions from a csv transitions list with'
     file_used = libfile
     library = parse_srmatlas_file(libfile)
+elif options.library_format == "pepfile": 
+    print "Experiment Type"
+    print ' '*5, 'Check transitions from a peptide list with'
+    file_used = libfile
+    library = parse_peptidelist(libfile, options.peplist_transitions)
 
 print ' '*5, par.thresh
 print ' '*5, 'Da for the q3 transitions.'

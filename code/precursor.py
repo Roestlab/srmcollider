@@ -143,6 +143,8 @@ class Precursors:
     *   3 - q1_charge
     *   4 - q1
     *   5 - ssrcalc
+
+    This is useful for most cases
     """
     import c_rangetree
     alltuples = [ (0,0, p.parent_id, p.q1_charge, p.q1, p.ssrcalc) for p in self.precursors]
@@ -163,6 +165,8 @@ class Precursors:
     *   6 
     *   7 
     *   8 isotopically modified
+
+    This is useful for the integrated run, see run_integrated.py
     """
     import c_rangetree
     alltuples = self.get_alltuples_extended_rangetree()

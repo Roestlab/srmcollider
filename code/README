@@ -25,6 +25,9 @@
  *
 """
 
+The SRMCollider code is organized into a Python module, a C++ module (see
+cpp/README) and a testing module (see test/)
+
 === Installation === 
 {{{
 

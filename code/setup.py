@@ -91,7 +91,7 @@ setup(name="srmcollider",
             library_dirs=["/usr/local/lib/python2.6/dist-packages/", boost_libdir],
             libraries = ["boost_python"]
             ),
-        Extension("c_getnonuis", ["cpp/py/getNonUis.cpp"], 
+        Extension("c_getnonuis", ["cpp/py/py_getNonUis.cpp"], 
             include_dirs=["./cpp", boost_includedir],
             library_dirs=["/usr/local/lib/python2.6/dist-packages/", boost_libdir],
             runtime_library_dirs=["./", "../"],

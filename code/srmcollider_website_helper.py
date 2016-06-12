@@ -49,6 +49,16 @@ class NonUnique():
             self.charge        = None
 
 class PeptideParser():
+    """
+    Parser class  for raw input. The main parsing functions are 
+
+        parse_transition_list: parses a list of input transitions in MGF / SpectraST format
+        parse_transition_csv: parses a list of input transitions in csv format
+        sanitize_peptide_input: parses a list of input peptide sequences
+
+    To retrieve the data, use get_seqs and calculate the default fragmentation
+    in case no fragments were provided using calculate_default_fragmenation
+    """
 
     def __init__(self, R):
         self.R  = R
@@ -83,6 +93,19 @@ class PeptideParser():
         return peptide
 
     def parse_transition_list(self, data):
+        """
+        Parse raw data in MGF / SpectraST format
+
+        Valid input:
+
+        Name: NLQGSNGGYAWEDEIK
+        Charge: 2
+        1167.53227 10 y10 1
+        890.42602 12 y7 1
+        504.26700 1 y4 1
+        962.43323 4 b10 1 
+
+        """
         peptides = []
         stack = []
         for line in data.splitlines(True):
@@ -102,7 +125,19 @@ class PeptideParser():
         return peptides
 
     def parse_peptide_lines(self, data):
-        # Parse lines belonging to the same peptides, the lines are expected to be in the format 
+        """
+        Parse lines belonging to the same peptides, the lines are expected to be in the csv format:
+
+        UniquePeptideIdentifier
+        PrecursorPeptideSequence
+        PrecursorCharge
+        Q1Mass
+        Q3Mass
+        FragmentIonLibraryIntensity
+        FragmentIonCharge
+        FragmentIonAnnotation 
+
+        """
         peptide = DDB.Peptide()
         firstline = data[0]
         if len(firstline) != 8: return None
@@ -127,7 +162,29 @@ class PeptideParser():
         return peptide
 
     def parse_transition_csv(self, data):
-        # Parse raw data that is organized in csv format (see above for format)
+        """
+        Parse raw data that is organized in csv format using the following columns:
+        
+        UniquePeptideIdentifier
+        PrecursorPeptideSequence
+        PrecursorCharge
+        Q1Mass
+        Q3Mass
+        FragmentIonLibraryIntensity
+        FragmentIonCharge
+        FragmentIonAnnotation 
+
+
+        For example, this is a valid input (note: no header)
+
+        tr1_1,NLQGSNGGYAWEDEIK,2,890.91106,1167.53227,10,1,y10
+        tr1_1,NLQGSNGGYAWEDEIK,2,890.91106,890.42602,12,1,y7
+        tr1_1,NLQGSNGGYAWEDEIK,2,890.91106,504.26700,1,1,y4
+        tr1_1,NLQGSNGGYAWEDEIK,2,890.91106,962.43323,4,1,b10
+        tr1_2,NLQGSNGGYAWEIK,2,890.91106,992.43323,4,1,b10
+        tr1_2,NLQGSNGGYAWEDIK,2,890.91106,982.43323,4,1,b10 
+
+        """
         import csv
         peptides = {}
         for line in csv.reader( data.split("\n")):
@@ -144,6 +201,9 @@ class PeptideParser():
         return result
 
     def sanitize_peptide_input(self, myinput):
+        """
+        Expects a list of peptide sequences
+        """
 
         seqs = "'"
         input_sequences = []
@@ -203,6 +263,11 @@ class PeptideParser():
         return input_sequences
 
 class SRMColliderController():
+    """
+    Main controller for the website
+
+    Parses the main form using parse_srmcollider_form or Skyline input using parse_skyline.
+    """
 
     def __init__(self):
         self.peptides = []

@@ -333,7 +333,7 @@ def do_analysis(input_sequences, seqs, par, wuis, local_cursor, controller):
         if len( transitions ) == 0: continue # no transitions in this window
 
         #
-        # Step 3 : find all potentially interfering precursors
+        # Step 3 : find all potentially interfering precursors using a MySQL query
         #  Create precursor and use db to find all interfering precursors
         #
         precursor = Precursor(modified_sequence = peptide.get_modified_sequence(), parent_id = -1,
@@ -400,6 +400,7 @@ sample_peptides_html = controller.get_sample_peptides_html()
 form = cgi.FieldStorage()   # FieldStorage object to
 
 if form.has_key('peptides'):
+    # Parse input and start processing with main
     try:
       par = controller.parse_srmcollider_form(form, genomes_that_require_N15_data)
     except KeyError,e:
@@ -413,6 +414,8 @@ else:
 
   html_ions = get_html_ions()
   textfield_peptides = ""
+
+  # Parse Skyline input and write it into the textfield
   if form.has_key("SkylineReport"):
     textfield_peptides = controller.parse_skyline(
       cgi.escape(form.getvalue("SkylineReport")) )

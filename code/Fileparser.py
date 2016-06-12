@@ -178,4 +178,30 @@ def parse_mprophet_resultfile(library, infile, threshold):
     for t in tr_n_found: err += t[0].sequence + '\t'  + t[1] + '\n'
     sys.stderr.write(err) 
 
+def parse_peptidelist(library, infile, threshold):
+    myfile = open(csvfile, 'rU') 
+    specdict = {}
+    for line in myfile:
+        key = line[ headerdict['ModifiedSequence']] + '/' + line[headerdict['PrecursorCharge']]
+        if specdict.has_key( key ): specdict[key].append(line)
+        else: specdict[key] = [ line ]
+
+    library = []
+    for key in specdict:
+        lines = specdict[key]
+        s = Spectrum()
+        s.name        = key
+        s.sequence    = lines[0][headerdict['ModifiedSequence']].replace( 'C[160]', 'C').replace('C[+57]', 'C')
+        s.modified_sequence    = lines[0][headerdict['ModifiedSequence']].replace('C[+57]', 'C[160]')
+        s.precursorMZ = float(lines[0][headerdict['PrecursorMz']])
+        s.protein = lines[0][headerdict['protein_name']]
+        for peak in lines:
+            p = Peak()
+            p.peak             = float(peak[headerdict['ProductMz']])
+            p.intensity        = 10000.0 * 1.0/float(peak[headerdict['LibraryIntensity']]) 
+            p.type             = peak[headerdict['frg_type']] + '_' +  peak[headerdict['frg_z']]
+            p.mprophetline     = peak
+            s.peaks.append(p)
+        library.append(s)
+    return library
 

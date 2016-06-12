@@ -2,6 +2,13 @@
 This file tests the interoperability with the MySQL / SQLite databases.
 """
 
+# Please edit this if you would like to test the mysql connection
+test_database = 'srmcollider'
+mysql_conf_file = "~/.my.cnf.srmcollider"
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#  No edits below this line
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 from nose.tools import nottest
 from nose.plugins.attrib import attr
 import random
@@ -15,9 +22,6 @@ from Residues import Residues
 from test_shared import *
 import test_shared 
 from test_shared import check_cgetnonuis_availability
-
-test_database = 'srmcollider'
-mysql_conf_file = "~/.my.cnf.srmcollider"
 
 def psort_old(x,y):
     if(x[1] != y[1]): return -cmp(x[1], y[1]) 

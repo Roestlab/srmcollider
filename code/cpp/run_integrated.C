@@ -46,14 +46,20 @@
 //
 int main(int argc, const char ** argv)
 {
+  try {
+
 
   Py_Initialize();
 
-  // now time to insert the current working directory into the python path so module search can take advantage
-  // this must happen after python has been initialised
+  // now time to insert the current working directory into the Python search
+  // path so module search can take advantage.  This must happen after Python
+  // has been initialised
   boost::filesystem::path workingDir = boost::filesystem3::complete("./").normalize();
   // TODO use filesystem or filesystem3
   PyObject* sysPath = PySys_GetObject("path");
+  PyList_Insert( sysPath, 0, PyString_FromString(workingDir.string().c_str()));
+
+  workingDir = boost::filesystem3::complete("../").normalize();
   PyList_Insert( sysPath, 0, PyString_FromString(workingDir.string().c_str()));
 
   python::object ignored;
@@ -101,6 +107,12 @@ int main(int argc, const char ** argv)
   SRMCollider::pyToC::initialize_param_obj(par, params);
   params.q3_window = q3_window;
   params.ppm = false;
+
+  }
+  // Catch any Python errors during set up and print them ...
+  catch (python::error_already_set) {
+    PyErr_Print();
+  }
 
   for (int i = 0; i < precursors_to_evaluate.attr("__len__")(); i++)
   {

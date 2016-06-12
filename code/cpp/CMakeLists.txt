@@ -5,13 +5,13 @@ set(CMAKE_BUILD_TYPE Release)
 
 # All executables 
 set(my_executables
-testPrecursor
-testgetNonUIS
-testIntegrated
-testRangetree
-testeUIS
-testLibrary
-combinatorics_test
+test/testPrecursor
+test/testgetNonUIS
+test/testIntegrated
+test/testRangetree
+test/testeUIS
+test/testLibrary
+test/testCombinatorics
 run_integrated
 )
 
@@ -41,6 +41,7 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
   ${PYTHON_INCLUDE_DIRS}
   ${CGAL_INCLUDE_DIRS}
+  "./"
 )
 
 # cgal requires the -frounding-math option
@@ -55,11 +56,11 @@ foreach(i ${my_executables})
 endforeach(i)
 
 ENABLE_TESTING()
-ADD_TEST(testgetNonUIS testgetNonUIS)
-ADD_TEST(testPrecursor testPrecursor)
-ADD_TEST(testIntegrated testIntegrated)
-ADD_TEST(testRangetree testRangetree)
-ADD_TEST(testeUIS testeUIS)
-ADD_TEST(testLibrary testLibrary)
-ADD_TEST(combinatorics_test combinatorics_test)
+ADD_TEST(testgetNonUIS test/testgetNonUIS)
+ADD_TEST(testPrecursor test/testPrecursor)
+ADD_TEST(testIntegrated test/testIntegrated)
+ADD_TEST(testRangetree test/testRangetree)
+ADD_TEST(testeUIS test/testeUIS)
+ADD_TEST(testLibrary test/testLibrary)
+ADD_TEST(testCombinatorics test/testCombinatorics)
 

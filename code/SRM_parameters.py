@@ -73,6 +73,7 @@ class SRM_parameters(object):
         self.experiment_type = ''
         self.select_by       = None # possible values are "id", "sequence", "modified_sequence", "none"
         self.add_sql_select  = None 
+        self.query2_add  = '' 
 
         self.R = Residues.Residues('mono')
 
@@ -121,6 +122,9 @@ class SRM_parameters(object):
 
     def set_peptide_tables(self, p):
         self.peptide_tables = p
+
+    def set_single_peptide_table(self, p):
+        self.peptide_tables = [p]
  
     def set_mysql_config(self, c):
         self.mysql_config = c

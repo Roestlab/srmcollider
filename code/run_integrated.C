@@ -136,12 +136,13 @@ int main(int argc, const char ** argv)
       transition_group, max_uis, q3_window, ppm, max_nr_isotopes, isotope_correction,
          params, rangetree, collisions_per_peptide);
 
-      std::vector<int> c_result;
-      for(int i =1; i<= max_uis; i++) {
-        std::set<COMBINT> combinations;
-        SRMCollider::Combinatorics::get_non_uis_bitwise(collisions_per_peptide, transitions_length, i, combinations);
-        c_result.push_back(combinations.size());
-      }
+    // Use the collisions_per_peptide vector (bitwise vector) to compute the non-UIS combinations
+    std::vector<int> c_result;
+    for(int i =1; i<= max_uis; i++) {
+      std::set<COMBINT> combinations;
+      SRMCollider::Combinatorics::get_non_uis_bitwise(collisions_per_peptide, transitions_length, i, combinations);
+      c_result.push_back(combinations.size());
+    }
 
 #endif
 

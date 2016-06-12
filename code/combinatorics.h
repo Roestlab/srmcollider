@@ -50,7 +50,7 @@ namespace SRMCollider
     * M is the order
     * N is the length of the input vector
     * mapping is an array of integers of fixed length (see srmcollider.h)
-    * result is a python dictionary that holds all combinations, they are
+    * result is a std::set that holds all combinations, they are
     *   implemented as integers with bitflags set or unset
     */
     void _combinations_bitwise(int M, int N, COMBINT* mapping,
@@ -196,7 +196,8 @@ namespace SRMCollider
 
         for (uint i=0; i<newcollperpep.size(); i++) {
 
-            //count the number of binary ones in the bitarray
+            // count the number of binary ones (number of interfered
+            // transitions) in the bitarray in "onecounter"
             mask = 1;
             onecounter = 0;
             tmparr = newcollperpep[i];
@@ -206,7 +207,7 @@ namespace SRMCollider
                 //true if nonzero
                 if(tmparr & mask) 
                     mapping[onecounter++] = mask;
-                mask <<=1;
+                mask <<=1; // shift mask to the left
             }
 
             /* The other way to do it
@@ -216,6 +217,11 @@ namespace SRMCollider
             }
             */
 
+            // Compute all combinitions that are now not unique due to the
+            // current interference in result :
+            // If we have 5 interfering transitions and are interested in UIS
+            // of order 2, there will be "5 choose 2" ways (10 ways) to have a
+            // non UIS of order 2).
             _combinations_bitwise(order, onecounter, mapping, result);
         }
 
@@ -313,7 +319,7 @@ namespace SRMCollider
                     ); break;
             default:
                 PyErr_SetString(PyExc_ValueError, 
-                    "Order (M) larger than 5 is not implemented");
+                    "Order (M) larger than 10 is not implemented");
                 boost::python::throw_error_already_set();
                 return;
         }

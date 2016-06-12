@@ -185,10 +185,17 @@ namespace SRMCollider
   }
 
   /*
-   * Return the number of non-UIS for all orders up to max_uis
+   * Computes a list of interferences for the given input peptide. 
+   *
+   * The interferences are stored in the output vector newcollperpep and are
+   * encoded as integer of size COMBINT where, for each entry, 0 means absence
+   * of interference and 1 means presence of interference.
+   *
    * Given the transitions and then four numbers giving the coordinate window in
    * which the precursors should be found: 
+   *
    *   q1_low, ssrcalc_low, q1_high, ssrcalc_high, 
+   *
    * Also the peptide key of the current peptide has to be given (to exclude it)
    * as well as the maximal order of UIS to compute, the used q3 window and
    * whether the q3 window is given in ppm (parts per million), default unit is
@@ -196,10 +203,10 @@ namespace SRMCollider
    *
    * This function uses "bitwise operations" to speed up the calculation: each combination of
    * transitions is encoded in an integer, which allows easy storage and
-   * computation by bitshits even though the code gets less easy to understand.
+   * computation by bitshifts even though the code gets less easy to understand.
    * The default length of the integer is 32 bits thus we can at most handle
    * combinations for 31 transitions; if more are needed one needs to change
-   * COMBINT to an integer format that usees more bits, e.g. unit64_t or even the
+   * COMBINT to an integer format that uses more bits, e.g. unit64_t or even the
    * BigInt class for larger integers.
    * If there are more transitions provided than allowed, an error will be
    * thrown. 
@@ -242,7 +249,7 @@ namespace SRMCollider
       // This assumes that we do not have peptide_keys mapped to different
       // colliding transitions. In fact we do not have this situation even though
       // we have duplicate peptide_keys (from the isotopes). But they will
-      // produce the same interefering transitions and thus the same entry in the
+      // produce the same interfering transitions and thus the same entry in the
       // collisions per peptide table.
 
       while(current!=OutputList.end())

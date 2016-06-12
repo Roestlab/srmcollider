@@ -130,6 +130,7 @@ for precursor in precursors_to_evaluate:
 
     collisions_per_peptide = computed_collisions 
 
+    # see SRMCollider::Combinatorics::get_non_uis
     non_useable_combinations = c_getnonuis.get_non_uis( collisions_per_peptide, myorder)
     srm_ids = [t[1] for t in transitions]
     tuples_strike1 = 0
@@ -146,6 +147,8 @@ for precursor in precursors_to_evaluate:
       precursors = tuple([parentid_lookup[myid[0]] for myid in precursor_ids
                           #dont select myself 
                          if parentid_lookup[myid[0]][2]  != pep['transition_group']])
+
+      # collisions_per_peptide: dictionary, for each key the set of interfering transitions is stored
       collisions_per_peptide = c_getnonuis.calculate_collisions_per_peptide_other_ion_series( 
           transitions, precursors, par, q3_low, q3_high, par.q3_window, par.ppm, forceChargeCheck)
       local_interferences = [t[0] for t in c_getnonuis.get_non_uis( collisions_per_peptide, 1).keys()]
@@ -164,6 +167,10 @@ for precursor in precursors_to_evaluate:
     #    n transitions, we get n vectors with a number of SSRCalc values.
     # 2. Check whether there exists one retention time (SSRcalc value) that is
     #    present in all vectors.
+
+    # ssrcalcvalues is a list of lists where the outer list has nr_tr elements.
+    # Thus, for each transition we have a list of RT values where an a peptide
+    # with an interfering transition will elute. 
 
     # complexity: nr_tr * k 
     # we get the list of ssrcalc-values for each transition 

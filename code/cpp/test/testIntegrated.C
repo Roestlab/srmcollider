@@ -25,7 +25,13 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE MyTest
- 
+
+// SRMCollider Lib
+#include <srmcollider.h>
+#include <srmcolliderLib.h>
+#include <integratedrun.h>
+#include <rangetree.h>
+
 // Including headers from CGAL 
 #include <CGAL/Cartesian.h>
 #include <CGAL/Range_segment_tree_traits.h>
@@ -33,12 +39,6 @@
 
 #include <boost/test/unit_test.hpp>
 #include <iostream>
-
-//include our own libraries
-#include "srmcollider.h"
-#include "srmcolliderLib.h"
-#include "integratedrun.h"
-#include "rangetree.h"
 
 #define EPS_05 boost::test_tools::fraction_tolerance(1.e-5) 
  

@@ -28,7 +28,10 @@
 #include <boost/test/unit_test.hpp>
 #define EPS_05 boost::test_tools::fraction_tolerance(1.e-5) 
 
-#include "rangetree.h"
+// SRMCollider Lib
+#include <rangetree.h>
+
+namespace python = boost::python;
 
 // this tests the results returned by the tree
 void test_tree_c(SRMCollider::ExtendedRangetree::Rangetree_Q1_RT tree)

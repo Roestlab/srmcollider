@@ -14,11 +14,11 @@ All tests are in ./test and in order to run them use
     make && make test
 
 All Python extension modules are in ./py and will not be built with cmake.
-Please use the Python setup procedure to achieve this (should be in ..).
+Please use the `setup.py` script to build those extension modules.
 
 # Functionality
 
-The C++ is made out of 5 components, a combinatorics module, a range tree
+The C++ library consists of 5 components, a combinatorics module, a range tree
 module, a common library, a module for computation of eUIS (extended UIS) and a
 file for integrated runs which pushes most computation down to C++ to gain
 speed.
@@ -64,7 +64,7 @@ the rangetree query and the computation of the non UIS transitions into a single
 
 # Python bindings
 
-In the ./py folder, you can find bindings for four of the above modules plus a
+In the `./py` folder, you can find bindings for four of the above modules plus a
 shared python integration library at `py/py_srmcolliderLib.h`. The common library
 contains some SRMCollider::Common functions as well as SRMCollider::pyToC which
 can convert from C++ to Python data structures and back. The individual bindings are 
@@ -76,5 +76,4 @@ can convert from C++ to Python data structures and back. The individual bindings
 
 Each of these can be compile to an independent Python module using the
 `setup.py` installation script provided with SRMCollider.
-
 

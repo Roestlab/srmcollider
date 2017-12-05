@@ -38,7 +38,8 @@ server 5.1 or higher, as well Biopython.
 Alternatively there also exists experimental support for SQLite.
 
 These components can be installed on ubuntu using the command 
-sudo apt-get install -y python mysql-server python-mysqldb python-biopython 
+
+$ sudo apt-get install -y python mysql-server python-mysqldb python-biopython 
 
 In order to compile the C++ extensions, the Boost.Python libraries are
 necessary as well as the CGAL libraries. These can be installed on Ubuntu using
@@ -67,7 +68,7 @@ After that, you should run the tests (see testing down below)
 {{{
 
 Installing the SRMCollider on Windows is is possible for experienced users only
-since you need many additional programs. Compiling the C++ extensions has not
+since you need many additional software. Compiling the C++ extensions has not
 yet been tested but the basic functionality should be accessible using the
 Python-only version. To complete a successful install on Windows, you will have
 to do the following:
@@ -77,7 +78,7 @@ Install MySQL from http://dev.mysql.com/downloads/mysql/
 Install MySQLdb from http://www.lfd.uci.edu/~gohlke/pythonlibs/ - search for
     MySQL-python-1.2.3.win32-py2.6.exe 
 
-this should be sufficient for an minimal install on Windows. However it will
+This should be sufficient for an minimal install on Windows. However it will
 not enable you to compile the C++ extensions. There are several examples out
 there on how to do it, e.g. http://docs.python.org/extending/windows.html but
 be aware that the SRMCollider relies on the following libraries:
@@ -86,16 +87,16 @@ be aware that the SRMCollider relies on the following libraries:
 * Boost.Python
 * CGAL
 
-There some soltions that rely on MinGW or VC++, see here for example:
+There some solutions that rely on MinGW or VC++, see here for example:
 http://stackoverflow.com/questions/101061/building-python-c-extension-modules-for-windows
 but you then still need to install the above libraries.
 
-Furthermore, the SRMCollider requires a working MySQL server somewhere which is
-best running on a dedicated host. However for non-performance critical
-applications, also a local MySQL server or a SQLite installation is supported.
-For the Python bindings to SQLite, pysqlite is used which may be obtained here:
-https://code.google.com/p/pysqlite/. To install a MySQL server on a windows
-machine, there are instructions available from the MySQL project
+Furthermore, the SRMCollider requires either sqlite or a MySQL server which can
+be installed locally or on a dedicated host. However for non-performance
+critical applications, also a local MySQL server or a SQLite installation is
+supported.  For the Python bindings to SQLite, pysqlite is used which may be
+obtained here: https://code.google.com/p/pysqlite/. To install a MySQL server
+on a windows machine, there are instructions available from the MySQL project
 https://dev.mysql.com/doc/refman/5.1/en/windows-installation.html and SQLite
 binaries are precompiled here https://www.sqlite.org/download.html.
 
@@ -132,10 +133,6 @@ that file:
         Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch +IncludesNoExec
         Order allow,deny
         Allow from all
-        AuthName "The SRMCollider (please enter the authentication you received in the manuscript draft)"
-        AuthType Basic
-        AuthUserFile /home/hannesroest/.htpasswd
-        Require valid-user
     </Directory>
 
     ErrorLog /var/log/apache2/srmcollider_error.log
@@ -147,7 +144,6 @@ that file:
     CustomLog /var/log/apache2/srmcollider_access.log combined
 
 </VirtualHost>
-
 
 
 The following files from the folder "cgi-scripts" go the folder "/var/webapps/srmcollider/web_scripts/":
@@ -167,111 +163,6 @@ and edit everything above according to your setup.
 
 Congratulations, after restarting apache the webserver should now be available
 at yourdomain.org/srmcollider/srmcollider.py
-
-}}}
-
-}}}
-
-=== Usage === 
-{{{ 
-
-=== MySQL setup ===
-
-Login to your mysql server as root and issue the following commands
-
-CREATE USER 'srmcollider'@'localhost' IDENTIFIED BY 'srmcollider';
-CREATE DATABASE srmcollider;
-GRANT ALL ON srmcollider.* TO 'srmcollider'@'localhost';
-FLUSH PRIVILEGES;
-
-This will create a user with the name "srmcollider" and the password
-"srmcollider". Do _not_ do this on a server that is accessible to the public,
-chose some other username/password combination! Then create a
-.my.cnf.srmcollider file that looks like this
-
-[client]
-host=localhost
-user=srmcollider
-port=3306
-password=srmcollider
-database=srmcollider
-
-Great, you now have a MySQL server that is configured for the SRMCollider.  The
-script sqltest_tables_setup.py in the test folder is able to fill test data in
-(see action below) and the scripts/create_db.py script can add real data.
-
-==== Setup ==== 
-
-{{{
-You can set up the collider on a protein fasta file using these commands:
-
-python scripts/trypsinize.py mygenome.fasta peptides.txt
-./SSRCalc3.pl --alg 3.0 --source_file peptides.txt --output tsv  --B 1 --A 0  \
-        > ssrcalc.out
-python scripts/create_db.py --mysql_config=~/.my.cnf.srmcollider --peptide_table=mygenome \
-        --tsv_file=ssrcalc.out 
-
-note that you need SSRCalc installed to compute the second step. This script is
-for instance included in a TPP install and can be optained at
-https://sashimi.svn.sourceforge.net/svnroot/sashimi/tags/release_4-3-1/trans_proteomic_pipeline/perl/
-(SSRCalc3.par and SSRCalc3.pl are the relevant files). The last steps creates a
-MySQL-table called "mygenome" using the given config file. Alternatively, also
-a SQLite database can be created if the packge python-sqlite and sqlite itself
-are installed. 
-}}}
-
-==== Query individual peptides ==== 
-
-{{{
-To query single peptides that have relative transition intensity information
-associated with them, there is the runcollider.py script.
-
-It allows to input a list of peptides with relative transition
-intensity information and will output the minimal number of transitions needed
-to create a unique assay. 
-
-Accepted inputs are srmAtlas tsv files and mProphet csv files.
-When using mProphet files, it is also possible to use experimental intensities
-to check whether the measured transitions are still sufficient to form an UIS.
-
-Example Workflow: 
-    1. open https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/GetTransitions
-    2. search for some protein, e.g. YLR304C  
-    2.a make sure that you select as many fragments per peptide as possible,
-        e.g. use the option "Num of highest Inten Frag Ions to Keep:"
-    3. download file "best_peptides..." 
-    4. run "./runcollider.py filename -p mygenome --srmatlas_tsv --max_uis 10 --mysql_config=~/.my.cnf.srmcollider"
-
-This will produce two files, outfile_peptides.csv and outfile_transitions.csv
-where the outfile_peptides.csv file contains only 2 columns: the name /
-sequence of the peptide and secondly the number of minimally necessary
-transitions. NOTE that a value of -1 means that there were not enough
-transitions to be specific in the given background.
-
-The omission of the parameter was possible, since this is the
-default value. It will output some statistics and a file that contains the
-transitions to use (for each precursor the minimally necessary number of
-transitions plus a specified number of extra (safety) transitions).
-
-Further parameters that might be of interest here are
---safety : Number of transitions to add above the absolute
-           minimum. Defaults to 3.
---file   : output filename
-
-}}}
-
-==== Query whole proteomes ==== 
-{{{
-To run queries against whole proteomes, the runcollider.py script is not
-adviseable since it is not fast enough. This is mostly because it has to
-perform an MySQL query for each peptide in the input and this will slow down
-the execution.
-
-Instead there are several sample scripts in the code/ directory which will
-query a whole proteome. One of these is run_uis.py which will create a
-rangetree and query it instead of the MySQL database.
-
-}}}
 
 ==== Set up a webserver using the cgi-scripts ==== 
 
@@ -293,30 +184,7 @@ directory) to be placed under the apache root in a folder called stylesheets,
 e.g. /stylesheets/srmcollider.css -- in addition there is also a color
 stylesheet, e.g. called brown.css which is also necessary.
 
-==== For a full genome ==== 
 
-To run the collider on all peptides between 400 and 1400 Da, execute the
-following command:
-
-python run_uis.py 1 400 1400 --peptide_table=mygenome --max_uis 5 --use_db --mysql_config=~/.my.cnf.srmcollider"
-
-However that for large genomes, this might cause all memory of
-the system to be used since it tries to build a rangetree with all peptides in
-the genome.  There are two solutions: 
-* either partition the calls to run_uis.py using the convenient
-  scripts/prepare_rangetree.py script which will generate a .sh file that has
-  many calls to run_uis.py using different ranges such that each range contains
-  a specified number of peptides. 
-* The other solution is to use the --use_db parameter which will query the
-  database to get the interfering transitions instead of using a rangetree.
-  This will also work if you did not compile the C++ extensions.
-
-The drawback with the first method is increased overhead when setting up the
-individual rangetrees, the drawback with the second method is the slowdown
-created by using MySQL queries instead of querying the rangetree.
-
-Changing the constraints for Q1/Q3/RT can be easily done using the --q1_window,
---q3_window and --ssrcalc_window parameters
 }}}
 
 }}}

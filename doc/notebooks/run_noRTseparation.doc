@@ -1,0 +1,467 @@
+#
+# vim:set fdm=marker:
+
+# {{{
+#
+wget http://www.peptideatlas.org/builds/human/201111/APD_Hs_all.fasta
+grep -c ">" APD_Hs_all.fasta 
+grep -v ">" APD_Hs_all.fasta > APD_Hs_peptides.fasta
+perl SSRCalc3.pl --alg 3.0 --source_file APD_Hs_peptides.fasta  --output tsv --B 1 --A 0  > APD_Hs_peptides.ssrcalc
+grep -v Z scripts/APD_Hs_peptides.ssrcalc | grep -v B > scripts/APD_Hs_peptides.fix.ssrcalc
+python scripts/create_db.py --mysql_config=~/.my.cnf.srmcollider --peptide_table=srmcollider.human_pa --tsv_file=scripts/APD_Hs_peptides.fix.ssrcalc
+
+# testing
+# {{{
+NR_ISOTOPES=3
+python run_integrated.py 103 890 900 --peptide_table=srmcollider.human_pa  --max_uis 5 -i $NR_ISOTOPES --q1_window=1 --q3_window=1 --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+NR_ISOTOPES=0
+python run_integrated.py 104 890 900 --peptide_table=srmcollider.human_pa  --max_uis 5 -i $NR_ISOTOPES --q1_window=1 --q3_window=1 --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+NR_ISOTOPES=1
+python run_integrated.py 106 890 900 --peptide_table=srmcollider.human_pa  --max_uis 5 -i $NR_ISOTOPES --q1_window=1 --q3_window=1 --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+
+
+NR_ISOTOPES=3
+python run_integrated.py 107 890 900 --peptide_table=srmcollider.human_pa  --max_uis 5 -i $NR_ISOTOPES --q1_window=1 --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+NR_ISOTOPES=3
+python run_integrated.py 108 890 900 --peptide_table=srmcollider.human_pa  --max_uis 5 -i $NR_ISOTOPES --q1_window=1 --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+NR_ISOTOPES=3
+python run_integrated.py 109 890 900 --peptide_table=srmcollider.human_pa  --max_uis 5 -i $NR_ISOTOPES --q1_window=1 --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+NR_ISOTOPES=3
+python run_integrated.py 110 890 900 --peptide_table=srmcollider.human_pa  --max_uis 5 -i $NR_ISOTOPES --q1_window=1 --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+
+NR_ISOTOPES=0
+python run_integrated.py 111 890 900 --peptide_table=srmcollider.human_pa  --max_uis 5 -i $NR_ISOTOPES --q1_window=1 --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+NR_ISOTOPES=0
+python run_integrated.py 112 890 900 --peptide_table=srmcollider.human_pa  --max_uis 5 -i $NR_ISOTOPES --q1_window=1 --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+
+NR_ISOTOPES=3
+python run_integrated.py 120 400 500 --peptide_table=srmcollider.human_pa  --max_uis 5 -i $NR_ISOTOPES --q1_window=1 --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 120 500 600 --peptide_table=srmcollider.human_pa  --max_uis 5 -i $NR_ISOTOPES --q1_window=1 --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 120 600 900 --peptide_table=srmcollider.human_pa  --max_uis 5 -i $NR_ISOTOPES --q1_window=1 --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+# }}}
+
+## 301 100 --ppm
+## 302 75  --ppm
+## 303 50  --ppm
+## 304 25  --ppm
+## 305 10  --ppm
+## 306 5   --ppm
+## 307 2.5 --ppm
+## 308 1   --ppm
+## 309 0.1 --ppm
+
+# running PA
+# {{{
+# running (3 isotopes)
+# {{{
+NR_ISOTOPES=3
+python run_integrated.py 300 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 301 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 302 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 303 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 304 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 305 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 306 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 307 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 308 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 309 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+NR_ISOTOPES=3
+Q1WIN=0.5
+python run_integrated.py 310 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 311 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 312 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 313 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 314 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 315 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 316 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 317 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 318 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 319 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+
+NR_ISOTOPES=3
+Q1WIN=0.25
+python run_integrated.py 320 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 321 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 322 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 323 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 324 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 325 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 326 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 327 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 328 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 329 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+Q1WIN=0.1
+python run_integrated.py 330 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 331 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 332 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 333 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 334 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 335 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 336 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 337 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 338 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 339 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+# }}}
+
+# running (1 isotopes)
+# {{{
+NR_ISOTOPES=1
+python run_integrated.py 400 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 401 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 402 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 403 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 404 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 405 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 406 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 407 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 408 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 409 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+Q1WIN=0.5
+python run_integrated.py 410 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 411 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 412 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 413 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 414 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 415 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 416 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 417 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 418 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 419 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+Q1WIN=0.25
+python run_integrated.py 420 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 421 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 422 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 423 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 424 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 425 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 426 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 427 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 428 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 429 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+Q1WIN=0.1
+python run_integrated.py 430 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 431 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 432 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 433 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 434 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 435 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 436 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 437 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 438 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 439 400 1200 --peptide_table=srmcollider.human_pa  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_pa --mysql_config=~/.my.cnf.srmcollider  
+
+# }}}
+# }}}
+
+# running uniprot
+# {{{
+# running (3 isotopes)
+# {{{
+NR_ISOTOPES=3
+python run_integrated.py 1300 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+
+python run_integrated.py 1301 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 1302 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 1303 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 1304 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 1305 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 1306 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 1307 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 1308 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 1309 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+
+NR_ISOTOPES=3
+Q1WIN=0.5
+python run_integrated.py 310 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 311 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 312 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 313 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 314 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 315 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 316 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 317 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 318 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 319 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+
+
+NR_ISOTOPES=3
+Q1WIN=0.25
+python run_integrated.py 320 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 321 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 322 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 323 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 324 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 325 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 326 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 327 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 328 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 329 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+
+Q1WIN=0.1
+python run_integrated.py 330 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 331 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 332 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 333 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 334 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 335 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 336 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 337 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 338 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 339 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+
+# }}}
+
+# running (1 isotopes)
+# {{{
+NR_ISOTOPES=1
+python run_integrated.py 400 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 401 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 402 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 403 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 404 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 405 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 406 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 407 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 408 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 409 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=1 --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+
+Q1WIN=0.5
+python run_integrated.py 410 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 411 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 412 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 413 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 414 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 415 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 416 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 417 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 418 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 419 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+
+Q1WIN=0.25
+python run_integrated.py 420 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 421 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 422 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 423 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 424 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 425 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 426 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 427 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 428 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 429 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+
+Q1WIN=0.1
+python run_integrated.py 430 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=200 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 431 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=100 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 432 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=75 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 433 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=50 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 434 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=25 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 435 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=10 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 436 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 437 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=2.5 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 438 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+python run_integrated.py 439 400 1200 --peptide_table=srmcollider.human_uniprot  --max_uis 1 -i $NR_ISOTOPES --q1_window=$Q1WIN --q3_window=0.1 --ppm True --ssrcalc_window=99999  --query_peptide_table=srmcollider.human_uniprot --mysql_config=~/.my.cnf.srmcollider  
+
+# }}}
+# }}}
+
+# results (batch 1)
+# {{{
+select exp_key, sum_nonUIS, nr_peptides, sum_nonUIS/nr_peptides from srmcollider.result_completegraph_aggr where uisorder = 1 and exp_key > 300 order by exp_key;
+
+create table srmcollider.result_no_transition (
+exp_key          int(11),
+nr_notransition  int(11),
+nr_total         int(11),
+diff             int(11)
+)
+
+
+# for iso = 3
+for i in range(300, 340):
+    print "insert into srmcollider.result_no_transition select %s, count(*), 71334, diff from (
+	select total_UIS-non_useable_UIS diff from srmcollider.result_completegraph where uisorder = 1 and exp_key = %s) t group by diff having diff = 0;" % (i, i)
+
+# for iso = 1
+for i in range(400, 440):
+    print "insert into srmcollider.result_no_transition select %s, count(*), 71334, diff from (
+	select total_UIS-non_useable_UIS diff from srmcollider.result_completegraph where uisorder = 1 and exp_key = %s) t group by diff having diff = 0;" % (i, i)
+
+
+library(RMySQL)
+conn = dbConnect(RMySQL::MySQL(), user="srmcollider", password="srmcollider", dbname="srmcollider")
+conn.result = dbSendQuery(conn, "select * from result_completegraph_aggr where uisorder = 1 and exp_key >= 300 and exp_key < 400 order by exp_key;")
+conn.data = fetch(conn.result)
+sql_r = conn.data[, 3] / conn.data[, 4]
+mdd = matrix(1-sql_r, nrow=10, ncol=4)
+
+conn = dbConnect(RMySQL::MySQL(), user="srmcollider", password="srmcollider", dbname="srmcollider")
+conn.result = dbSendQuery(conn, "select * from srmcollider.result_no_transition where exp_key >= 300 and exp_key < 400 order by exp_key;")
+conn.data = fetch(conn.result)
+sql_r = conn.data[, 2] / conn.data[, 3]
+notrm = matrix(sql_r, nrow=10, ncol=4)
+
+# {{{
+# no_trans = c( 0.8647 , 0.5731 , 0.4352 , 0.2586 , 0.0597 , 0.0094 , 0.0061 ,
+# 0.0057 , 0.0055 , 0.0055 , 0.7802 , 0.4478 , 0.3109 , 0.1566 , 0.0275 , 0.0053
+# , 0.0039 , 0.0037 , 0.0037 , 0.0037 , 0.6528 , 0.2944 , 0.1817 , 0.0791 ,
+# 0.0130 , 0.0034 , 0.0028 , 0.0027 , 0.0027 , 0.0027 , 0.4965 , 0.2433 , 0.1546
+# , 0.0700 , 0.0120 , 0.0033 , 0.0027 , 0.0027 , 0.0026 , 0.0026)
+# 
+# md = c(0.9875829504513977, 0.9379688551392044, 0.9031263799520565,
+#    0.840226905735694, 0.6894239379188045, 0.4848917701411669, 0.3678234005260465,
+#    0.33369247680804387, 0.3069749074336922, 0.2997902034794067,
+# 
+#   0.9779793602980346, 0.9103542074081084, 0.8652355249600471,
+#   0.7879773210355511, 0.6188099841064569, 0.41893479857956933,
+#   0.31436728869648417, 0.2852908500855132, 0.2630044600926627,
+#   0.2572164921355875,
+# 
+#   0.9612111904912104, 0.8696833513822301, 0.8134202418376931,
+#   0.7229151552906048, 0.5460453312060167, 0.361035131607999,
+#   0.27006680282193624, 0.2464717309154821, 0.22823915543867582,
+#   0.22383271388818796,
+# 
+#   0.9130798865197521, 0.8162729641545406, 0.7572390532565116,
+#   0.665245042248437, 0.49441875105139205, 0.324222583200157,
+#   0.24139925714771357, 0.22037664586662742, 0.2038983618216769,
+#   0.20004464035382846)
+# mdd = matrix(1-md, nrow=10, ncol=4)
+# notrm = matrix(no_trans, nrow=10, ncol=4)
+# }}}
+
+rownames(mdd) <- c("200 ppm", "100 ppm", "75  ppm", "50  ppm", "25  ppm", "10  ppm", "5   ppm", "2.5 ppm", "1   ppm", "0.1 ppm")
+#rownames(mdd) <- c("10k", "13k", "20k", "40k", "100k", "200k", "400k", "1M", "10M")
+colnames(mdd) <- c("1 Da", "0.5 Da", "0.25 Da", "0.1 Da")
+rownames(notrm) <- c("200 ppm", "100 ppm", "75  ppm", "50  ppm", "25  ppm", "10  ppm", "5   ppm", "2.5 ppm", "1   ppm", "0.1 ppm")
+colnames(notrm) <- c("1 Da", "0.5 Da", "0.25 Da", "0.1 Da")
+
+pdf("../results/human_pepatlas_single_transition.pdf")
+par(mgp=c(4,1,0))  
+op <- par(mar = c(6,5,4,2) + 0.1) ## default is c(5,4,4,2) + 0.1
+#matplot(mdd, type="l", main="Interfered transitions", ylab="Average fraction of interfered transitions", xlab="Q3 extraction accuracy", xaxt = 'n')
+matplot(mdd, type="l", main="Interference-free transitions", ylab="Average fraction of interference-free transitions", xlab="Q3 tolerance", xaxt = 'n', ylim=c(0,1))
+axis(1, at=1:nrow(mdd), labels=rownames(mdd),las=2, cex.axis=0.85)
+grid(NULL,NULL)
+nn <- ncol(mdd)
+legend("topleft", colnames(mdd),col=seq_len(nn),cex=0.8,fill=seq_len(nn), legend=colnames(mdd), title="Q1 tolerance")
+mddq = (1-mdd[, 1]) / (1-mdd)
+mddq = mddq[, 2:4]
+#matplot(mddq, type="l", main="Interfered transitions", ylab="Relative gain to 1 Da extraction window", xlab="Q3 tolerance", xaxt = 'n')
+matplot(mddq, type="l", main="Interfered transitions", ylab="Relative gain to 1 Da extraction window", xlab="Q3 tolerance", xaxt = 'n', ylim=c(1.0, 1.6))
+axis(1, at=1:nrow(mddq), labels=rownames(mddq),las=2, cex.axis=0.85)
+grid()
+nn <- ncol(mddq)
+legend("topleft", colnames(mddq),col=seq_len(nn),cex=0.8,fill=seq_len(nn), legend=colnames(mddq), title="Q1 tolerance")
+matplot(1-notrm, type="l", main="Peptides without a single transition", ylab="Fraction of peptides without a single interference-free transition",
+  xlab="Q3 tolerance", xaxt = 'n', ylim=c(0,1))
+axis(1, at=1:nrow(notrm), labels=rownames(notrm),las=2, cex.axis=0.85)
+grid()
+nn <- ncol(notrm)
+legend("bottomright", colnames(notrm),col=seq_len(nn),cex=0.8,fill=seq_len(nn), legend=colnames(notrm), title="Q1 tolerance")
+dev.off()
+
+
+library(RMySQL)
+conn = dbConnect(RMySQL::MySQL(), user="srmcollider", password="srmcollider", dbname="srmcollider")
+conn.result = dbSendQuery(conn, "select * from result_completegraph_aggr where uisorder = 1 and exp_key >= 400 and exp_key < 500 order by exp_key;")
+conn.data = fetch(conn.result)
+sql_r = conn.data[, 3] / conn.data[, 4]
+mdd = matrix(1-sql_r, nrow=10, ncol=4)
+
+conn = dbConnect(RMySQL::MySQL(), user="srmcollider", password="srmcollider", dbname="srmcollider")
+conn.result = dbSendQuery(conn, "select * from srmcollider.result_no_transition where exp_key >= 400 and exp_key < 500 order by exp_key;")
+conn.data = fetch(conn.result)
+sql_r = conn.data[, 2] / conn.data[, 3]
+notrm = matrix(sql_r, nrow=10, ncol=4)
+
+rownames(mdd) <- c("200 ppm", "100 ppm", "75  ppm", "50  ppm", "25  ppm", "10  ppm", "5   ppm", "2.5 ppm", "1   ppm", "0.1 ppm")
+colnames(mdd) <- c("1 Da", "0.5 Da", "0.25 Da", "0.1 Da")
+rownames(notrm) <- c("200 ppm", "100 ppm", "75  ppm", "50  ppm", "25  ppm", "10  ppm", "5   ppm", "2.5 ppm", "1   ppm", "0.1 ppm")
+colnames(notrm) <- c("1 Da", "0.5 Da", "0.25 Da", "0.1 Da")
+
+pdf("../results/human_pepatlas_single_transition_1iso.pdf")
+par(mgp=c(4,1,0))  
+op <- par(mar = c(6,5,4,2) + 0.1) ## default is c(5,4,4,2) + 0.1
+#matplot(mdd, type="l", main="Interfered transitions", ylab="Average fraction of interfered transitions", xlab="Q3 extraction accuracy", xaxt = 'n')
+matplot(mdd, type="l", main="Interference-free transitions", ylab="Average fraction of interference-free transitions", xlab="Q3 tolerance", xaxt = 'n', ylim=c(0,1))
+axis(1, at=1:nrow(mdd), labels=rownames(mdd),las=2, cex.axis=0.85)
+grid(NULL,NULL)
+nn <- ncol(mdd)
+legend("topleft", colnames(mdd),col=seq_len(nn),cex=0.8,fill=seq_len(nn), legend=colnames(mdd), title="Q1 tolerance")
+mddq = (1-mdd[, 1]) / (1-mdd)
+mddq = mddq[, 2:4]
+#matplot(mddq, type="l", main="Interfered transitions", ylab="Relative gain to 1 Da extraction window", xlab="Q3 tolerance", xaxt = 'n')
+matplot(mddq, type="l", main="Interfered transitions", ylab="Relative gain to 1 Da extraction window", xlab="Q3 tolerance", xaxt = 'n', ylim=c(1.0, 1.8))
+axis(1, at=1:nrow(mddq), labels=rownames(mddq),las=2, cex.axis=0.85)
+grid()
+nn <- ncol(mddq)
+legend("topleft", colnames(mddq),col=seq_len(nn),cex=0.8,fill=seq_len(nn), legend=colnames(mddq), title="Q1 tolerance")
+matplot(1-notrm, type="l", main="Peptides without a single transition", ylab="Fraction of peptides without a single interference-free transition",
+  xlab="Q3 tolerance", xaxt = 'n', ylim=c(0,1))
+axis(1, at=1:nrow(notrm), labels=rownames(notrm),las=2, cex.axis=0.85)
+grid()
+nn <- ncol(notrm)
+legend("bottomright", colnames(notrm),col=seq_len(nn),cex=0.8,fill=seq_len(nn), legend=colnames(notrm), title="Q1 tolerance")
+dev.off()
+
+
+
+
+par(mgp=c(3,1,0))
+op <- par(mar = c(5,4,4,2) + 0.1) ## default is c(5,4,4,2) + 0.1
+
+plot(mdd[, 2] / mdd[, 1], type="l")
+lines(mdd[, 3] / mdd[, 1], type="l")
+lines(mdd[, 4] / mdd[, 1], type="l")
+
+
+select  0.9379688551392044  /   0.9103542074081084 ;
+select  0.9031263799520565  /   0.8652355249600471 ;
+select   0.840226905735694  /   0.7879773210355511 ;
+select  0.6894239379188045  /   0.6188099841064569 ;
+select  0.4848917701411669  /  0.41893479857956933 ;
+select  0.3678234005260465  /  0.31436728869648417 ;
+select 0.33369247680804387  /   0.2852908500855132 ;
+select  0.3069749074336922  /   0.2630044600926627 ;
+select  0.2997902034794067  /   0.2572164921355875 ;
+
+select  0.9379688551392044 /    0.8696833513822301 ;
+select  0.9031263799520565 /    0.8134202418376931 ;
+select   0.840226905735694 /    0.7229151552906048 ;
+select  0.6894239379188045 /    0.5460453312060167 ;
+select  0.4848917701411669 /     0.361035131607999 ;
+select  0.3678234005260465 /   0.27006680282193624 ;
+select 0.33369247680804387 /    0.2464717309154821 ;
+select  0.3069749074336922 /   0.22823915543867582 ;
+select  0.2997902034794067 /   0.22383271388818796 ;
+
+
+select  0.9379688551392044  /    0.8162729641545406 ;
+select  0.9031263799520565  /    0.7572390532565116 ;
+select   0.840226905735694  /     0.665245042248437 ;
+select  0.6894239379188045  /   0.49441875105139205 ;
+select  0.4848917701411669  /     0.324222583200157 ;
+select  0.3678234005260465  /   0.24139925714771357 ;
+select 0.33369247680804387  /   0.22037664586662742 ;
+select  0.3069749074336922  /    0.2038983618216769 ;
+select  0.2997902034794067  /   0.20004464035382846 ;
+# }}}
+
+
+# }}}
+

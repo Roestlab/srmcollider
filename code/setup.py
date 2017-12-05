@@ -80,9 +80,11 @@ boost_includedir = '.'
 
 import fnmatch, os
 all_scripts = []
-for root, dirnames, filenames in os.walk('scripts'):
+for root, dirnames, filenames in os.walk('scripts/runscripts'):
   for filename in fnmatch.filter(filenames, '*.py'):
       all_scripts.append(os.path.join(root, filename))
+all_scripts.extend(['scripts/misc/trypsinize.py'])
+all_scripts.extend(['scripts/misc/create_db.py'])
 
 setup(name="srmcollider",
     url = "http://www.srmcollider.org", 

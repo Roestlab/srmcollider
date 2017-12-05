@@ -29,7 +29,13 @@ class Precursor:
       return self.transition_group
 
   def initialize(self, modified_sequence, transition_group, parent_id, q1_charge, q1, ssrcalc, modifications, missed_cleavages, isotopically_modified):
-    self.modified_sequence      = modified_sequence      
+
+    # Sqlite3 now returns unicode strings, handle these here
+    if isinstance(modified_sequence, str):
+        self.modified_sequence = modified_sequence
+    elif isinstance(modified_sequence, unicode):
+        self.modified_sequence = modified_sequence.encode("utf8")
+
     self.transition_group       = transition_group       
     self.parent_id              = parent_id              
     self.q1_charge              = q1_charge              

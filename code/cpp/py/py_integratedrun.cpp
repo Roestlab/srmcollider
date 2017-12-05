@@ -203,7 +203,7 @@ namespace SRMCollider
    "\n"
    "Uses integers with bitflags to store the combinations, thus the number of\n"
    "transitions that can be considered is limited by COMBLIMIT.  Also note that\n"
-   "the leftmost bit needs to be set to zero all the time, otherwise an infinte\n"
+   "the leftmost bit needs to be set to zero all the time, otherwise an infinite\n"
    "loop occurs, thus there is one bit we cannot use.\n"
    "\n"
    "\n"

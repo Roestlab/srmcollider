@@ -68,7 +68,7 @@ namespace SRMCollider
      *
      * Uses integers with bitflags to store the combinations, thus the number of
      * transitions that can be considered is limited by COMBLIMIT.  Also note that
-     * the leftmost bit needs to be set to zero all the time, otherwise an infinte
+     * the leftmost bit needs to be set to zero all the time, otherwise an infinite
      * loop occurs, thus there is one bit we cannot use.
     */
     int min_needed(std::vector<Transition>& mytransitions, std::vector<SRMPrecursor>& precursors,

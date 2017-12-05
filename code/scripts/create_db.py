@@ -45,6 +45,7 @@ MTGSVDRPDQNRGER	15	      7.83	      7.8
 
 import sys, csv
 sys.path.append('external/')
+sys.path.append('.')
 import MySQLdb
 import Residues
 import DDB 
@@ -148,6 +149,9 @@ def insert_peptide_in_db(self, db, peptide_table, transition_group):
         isotope_modification,
         transition_group
     )
+    if len( self.get_modified_sequence() ) > 255:
+        print "skip ", self.get_modified_sequence(), " due to length constraints"
+        return
     c.execute(q)
     self.parent_id = db.insert_id()
 

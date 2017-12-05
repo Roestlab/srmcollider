@@ -86,7 +86,7 @@ for root, dirnames, filenames in os.walk('scripts'):
 
 setup(name="srmcollider",
     url = "http://www.srmcollider.org", 
-    version = "1.4.2",
+    version = "1.5",
     author = "Hannes Roest",
     author_email = "roest@imsb.biol.ethz.ch",
     requires=["MySQLdb", "sqlite"],
@@ -120,5 +120,5 @@ setup(name="srmcollider",
             libraries = ["boost_python"]
             ),
     ],
-    )
+)
 

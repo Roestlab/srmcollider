@@ -7,19 +7,20 @@ from nose.plugins.attrib import attr
 from nose.tools import nottest
 
 import sys
+import time
 sys.path.append( '.')
 sys.path.append( '..')
 sys.path.append( '../external')
-import collider
 from nose.plugins.attrib import attr
 
 from test_shared import *
 import test_shared 
-import time
-from Residues import Residues
+
+from srmcollider import collider
+from srmcollider.Residues import Residues
 
 try:
-    import c_integrated
+    from srmcollider import c_integrated, c_rangetree
 except ImportError:
     print "=" * 75, """
 Module c_integrated is not available. Please compile it if you want to use it.
@@ -141,9 +142,7 @@ class Test_cintegrated(unittest.TestCase):
 
         alltuples = [ (p[1], p[2], p[2], p[3], p[0], 25, -1,-1, 0) for p in precursors]
 
-        import c_rangetree
         r = c_rangetree.ExtendedRangetree_Q1_RT.create()
-        r.new_rangetree()
         r.create_tree(tuple(alltuples))
 
         #//c_integrated.create_tree(tuple(alltuples))
@@ -199,9 +198,7 @@ class Test_cintegrated(unittest.TestCase):
 
         alltuples = [ (p[1], p[2], p[2], p[3], p[0], 25, -1,-1, 0) for p in precursors]
 
-        import c_rangetree
         r = c_rangetree.ExtendedRangetree_Q1_RT.create()
-        r.new_rangetree()
         r.create_tree(tuple(alltuples))
 
         #//c_integrated.create_tree(tuple(alltuples))

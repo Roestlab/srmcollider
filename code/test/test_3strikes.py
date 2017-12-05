@@ -6,13 +6,15 @@ This file tests the functionality of the collider.py module.
 import sys
 sys.path.extend(['.', '..', '../external/', 'external/'])
 
-import uis_functions
-from collider import thisthirdstrike
+from srmcollider import uis_functions
+from srmcollider.collider import thisthirdstrike
 
 from nose.plugins.attrib import attr
 
-try: import c_getnonuis
-except ImportError: pass
+try:
+    from srmcollider import c_getnonuis
+except ImportError:
+    pass
 
 class Test_3strikes(unittest.TestCase): 
 

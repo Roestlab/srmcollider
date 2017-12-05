@@ -11,6 +11,7 @@ mysql_conf_file = "~/.my.cnf.srmcollider"
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 from nose.tools import nottest
 from nose.plugins.attrib import attr
+
 import random
 import unittest
 import sys
@@ -18,8 +19,8 @@ sys.path.append( '..')
 sys.path.append( '../external')
 from nose.plugins.attrib import attr
 
-import collider
-from Residues import Residues
+from srmcollider import collider
+from srmcollider.Residues import Residues
 
 from test_shared import *
 import test_shared 
@@ -295,7 +296,7 @@ class Test_collider_sqlite(unittest.TestCase):
     def setUp(self):
 
         try:
-            import sqlite
+            import sqlite3 as sqlite
             from sqlite import DatabaseError
             self.database_available = True
         except ImportError:

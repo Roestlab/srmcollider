@@ -479,7 +479,7 @@ def get_non_UIS_from_transitions(transitions, collisions, par, MAX_UIS,
     """
     try: 
         # using C++ functions for this == faster
-        import srmcollider.c_getnonuis
+        from srmcollider import c_getnonuis
         non_uis_list = [{} for i in range(MAX_UIS+1)]
         collisions_per_peptide = getnonuis(transitions, collisions, par.q3_window, par.ppm)
         for order in range(1,MAX_UIS+1):

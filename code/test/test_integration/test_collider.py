@@ -6,15 +6,15 @@ This file tests the functionality of the collider.py module.
 import sys, time
 sys.path.extend(['.', '..','../..' '../external/', 'external/'])
 sys.path.extend(['test/'])
-import collider
+from srmcollider import collider
 
 PEPTIDE_TABLE_NAME = "srmPeptides_test"
 USE_SQLITE = True
 
 import test_shared 
 from test_shared import transitions_def1, collisions_def1
-from Residues import Residues
-from precursor import Precursors
+from srmcollider.Residues import Residues
+from srmcollider.precursor import Precursors
 
 from nose.plugins.attrib import attr
 
@@ -119,8 +119,13 @@ class Test_integration_run_uis(unittest.TestCase):
         prepare.append( (len(non_uis_list[order]), collider.choose(nr_transitions, 
           order), precursor.parent_id , order, -1) )
 
+    found = False
+    for p in prepare:
+        if p == (0, 17.0, 1, 1, -1):
+            found = True
+    self.assertEqual(found, True)
+
     self.assertEqual(len(prepare), 905*par.max_uis)
-    self.assertEqual(prepare[0], (0, 17.0, 1, 1, -1)) 
 
     final_report = self.get_final_report(par, prepare)
     self.check_final_report_nonswath(final_report)
@@ -153,8 +158,13 @@ class Test_integration_run_uis(unittest.TestCase):
         prepare.append( (len(non_uis_list[order]), collider.choose(nr_transitions, 
           order), precursor.parent_id , order, -1) )
 
+    found = False
+    for p in prepare:
+        if p == (0, 17.0, 1, 1, -1):
+            found = True
+    self.assertEqual(found, True)
+
     self.assertEqual(len(prepare), 905*par.max_uis)
-    self.assertEqual(prepare[0], (0, 17.0, 1, 1, -1)) 
     final_report = self.get_final_report(par, prepare)
     self.check_final_report_nonswath(final_report)
 
@@ -211,7 +221,12 @@ class Test_integration_run_uis(unittest.TestCase):
           order), precursor.parent_id , order, -1) )
 
     self.assertEqual(len(prepare), 39*par.max_uis)
-    self.assertEqual(prepare[0], (5, 8.0, 69, 1, -1) )
+
+    found = False
+    for p in prepare:
+        if p == (5, 8.0, 69, 1, -1):
+            found = True
+    self.assertEqual(found, True)
 
     final_report = self.get_final_report(par, prepare)
     self.check_final_report_swath(final_report)

@@ -47,198 +47,215 @@ namespace SRMCollider
         res_mass = 0.0;
         scounter = 0;
 
+        // Step 1: iterate through the sequence string and store the raw mass
+        //         offsets for each position in the tmp array.
+        //
+        //         Note: as the sequence length may not reflect the number of
+        //         AA, we use scounter to keep track of the number of AA we
+        //         have found whereas j iterates over the raw characters in the
+        //         sequence.
         inside = false;
         start = 0;
         j = 0; 
-        if(isotope_mod == NOISOTOPEMODIFICATION) {
-        //go through all characters in the sequence until 0 is hit
-        while((c = sequence[j++])) {
-            if(sequence[j] == '[') {
-                start = j-1;
-                inside = true;
-            }
-            else if(sequence[j-1] == ']') {
-                //We found a modification
-                switch(sequence[start]) {
-                    case 'M': 
-                        if(!(sequence[start+2] == '1' && 
-                             sequence[start+3] == '4' && 
-                             sequence[start+4] == '7' )) 
-                        {
-                          throw AANotFound("Unknown modification for methionine");
-                        }
-                        res_mass = 147.03540462; break;
-                    case 'C': 
-                        if(!(sequence[start+2] == '1' && 
-                             sequence[start+3] == '6' && 
-                             sequence[start+4] == '0' )) 
-                        {
-                          throw AANotFound("Unknown modification for cystein");
-                        }
-                        res_mass = 160.030653721; break;
-                    case 'N': 
-                        if(!(sequence[start+2] == '1' && 
-                             sequence[start+3] == '1' && 
-                             sequence[start+4] == '5' )) 
-                        {
-                          throw AANotFound("Unknown modification for asparagine");
-                        }
-                        res_mass = 115.026945583; break;
-                    case 'R': 
-                        if(!(sequence[start+2] == '1' && 
-                             sequence[start+3] == '6' && 
-                             sequence[start+4] == '6' )) 
-                        {
-                          throw AANotFound("Unknown modification for arginine");
-                        }
-                        res_mass = 166.109379; break;
-                    case 'K': 
-                        if(!(sequence[start+2] == '1' && 
-                             sequence[start+3] == '3' && 
-                             sequence[start+4] == '6' )) 
-                        {
-                          throw AANotFound("Unknown modification for lysine");
-                        }
-                        res_mass = 136.109159; break;
+        if(isotope_mod == NOISOTOPEMODIFICATION) 
+        {
 
-                    default: 
-                          throw AANotFound("Unknown modification");
-                }
-                //'M[147]':  131.04049 + mass_O), # oxygen
-                //'C[160]':  103.00919 + mass_CAM - mass_H ), # CAM replaces H
-                //'N[115]':  114.04293 - mass_N - mass_H + mass_O
-                // 'K[136]' : ('heavy Lysine', 128.09496 + 8.014199),
-                // 'R[166]' : ('heavy Arginine', 156.10111 + 10.008269),
+          //go through all characters in the sequence until 0 is hit
+          while((c = sequence[j++])) {
+              if(sequence[j] == '[') {
+                  start = j-1;
+                  inside = true;
+              }
+              else if(sequence[j-1] == ']') {
+                  //We found a modification
+                  switch(sequence[start]) {
+                      case 'M': 
+                          if(!(sequence[start+2] == '1' && 
+                               sequence[start+3] == '4' && 
+                               sequence[start+4] == '7' )) 
+                          {
+                            throw AANotFound("Unknown modification for methionine");
+                          }
+                          res_mass = 147.03540462; break;
+                      case 'C': 
+                          if(!(sequence[start+2] == '1' && 
+                               sequence[start+3] == '6' && 
+                               sequence[start+4] == '0' )) 
+                          {
+                            throw AANotFound("Unknown modification for cystein");
+                          }
+                          res_mass = 160.030653721; break;
+                      case 'N': 
+                          if(!(sequence[start+2] == '1' && 
+                               sequence[start+3] == '1' && 
+                               sequence[start+4] == '5' )) 
+                          {
+                            throw AANotFound("Unknown modification for asparagine");
+                          }
+                          res_mass = 115.026945583; break;
+                      case 'R': 
+                          if(!(sequence[start+2] == '1' && 
+                               sequence[start+3] == '6' && 
+                               sequence[start+4] == '6' )) 
+                          {
+                            throw AANotFound("Unknown modification for arginine");
+                          }
+                          res_mass = 166.109379; break;
+                      case 'K': 
+                          if(!(sequence[start+2] == '1' && 
+                               sequence[start+3] == '3' && 
+                               sequence[start+4] == '6' )) 
+                          {
+                            throw AANotFound("Unknown modification for lysine");
+                          }
+                          res_mass = 136.109159; break;
 
-                acc_mass += res_mass;
-                tmp[scounter] = acc_mass;
-                scounter++;
+                      default: 
+                            throw AANotFound("Unknown modification");
+                  }
+                  //'M[147]':  131.04049 + mass_O), # oxygen
+                  //'C[160]':  103.00919 + mass_CAM - mass_H ), # CAM replaces H
+                  //'N[115]':  114.04293 - mass_N - mass_H + mass_O
+                  // 'K[136]' : ('heavy Lysine', 128.09496 + 8.014199),
+                  // 'R[166]' : ('heavy Arginine', 156.10111 + 10.008269),
 
-                inside = false;
-            }
-            else if(inside) { }
-            else {
-                //We found a regular AA
-                switch(c) {
-                    case 'A': res_mass = 71.03711; break;
-                    case 'C': res_mass = 103.00919; break;
-                    case 'D': res_mass = 115.02694; break;
-                    case 'E': res_mass = 129.04259; break;
-                    case 'F': res_mass = 147.06841; break;
-                    case 'G': res_mass = 57.02146; break;
-                    case 'H': res_mass = 137.05891; break;
-                    case 'I': res_mass = 113.08406; break;
-                    case 'K': res_mass = 128.09496; break;
-                    case 'L': res_mass = 113.08406; break;
-                    case 'M': res_mass = 131.04049; break;
-                    case 'N': res_mass = 114.04293; break;
-                    case 'P': res_mass = 97.05276; break;
-                    case 'Q': res_mass = 128.05858; break;
-                    case 'R': res_mass = 156.10111; break;
-                    case 'S': res_mass = 87.03203; break;
-                    case 'T': res_mass = 101.04768; break;
-                    case 'V': res_mass = 99.06841; break;
-                    case 'W': res_mass = 186.07931; break;
-                    case 'X': res_mass = 113.08406; break;
-                    case 'Y': res_mass = 163.06333; break;
-                    default: 
-                          throw AANotFound("Unknown amino acid");
-                }
+                  acc_mass += res_mass;
+                  tmp[scounter] = acc_mass;
+                  scounter++;
 
-                acc_mass += res_mass;
-                tmp[scounter] = acc_mass;
-                scounter++;
-            }
-        }
+                  inside = false;
+              }
+              else if(inside) { }
+              else {
+                  //We found a regular AA
+                  switch(c) {
+                      case 'A': res_mass = 71.03711; break;
+                      case 'C': res_mass = 103.00919; break;
+                      case 'D': res_mass = 115.02694; break;
+                      case 'E': res_mass = 129.04259; break;
+                      case 'F': res_mass = 147.06841; break;
+                      case 'G': res_mass = 57.02146; break;
+                      case 'H': res_mass = 137.05891; break;
+                      case 'I': res_mass = 113.08406; break;
+                      case 'K': res_mass = 128.09496; break;
+                      case 'L': res_mass = 113.08406; break;
+                      case 'M': res_mass = 131.04049; break;
+                      case 'N': res_mass = 114.04293; break;
+                      case 'P': res_mass = 97.05276; break;
+                      case 'Q': res_mass = 128.05858; break;
+                      case 'R': res_mass = 156.10111; break;
+                      case 'S': res_mass = 87.03203; break;
+                      case 'T': res_mass = 101.04768; break;
+                      case 'V': res_mass = 99.06841; break;
+                      case 'W': res_mass = 186.07931; break;
+                      case 'X': res_mass = 113.08406; break;
+                      case 'Y': res_mass = 163.06333; break;
+                      default: 
+                            throw AANotFound("Unknown amino acid");
+                  }
 
-        } else if(isotope_mod == N15_ISOTOPEMODIFICATION ) {
-        // using values for N15 isotopic modification 
-        while((c = sequence[j++])) {
-            if(sequence[j] == '[') {
-                start = j-1;
-                inside = true;
-            }
-            else if(sequence[j-1] == ']') {
-                //We found a modification
-                switch(sequence[start]) {
-                    case 'M': 
-                        if(!(sequence[start+2] == '1' && 
-                             sequence[start+3] == '4' && 
-                             sequence[start+4] == '7' )) 
-                        {
-                          throw AANotFound("Unknown modification for methionine");
-                        }
-                        res_mass = 148.0324344260; break;
-                    case 'C': 
-                        if(!(sequence[start+2] == '1' && 
-                             sequence[start+3] == '6' && 
-                             sequence[start+4] == '0' )) 
-                        {
-                          throw AANotFound("Unknown modification for cysteine");
-                        }
-                        res_mass = 161.027683399; break;
-                    case 'N': 
-                        if(!(sequence[start+2] == '1' && 
-                             sequence[start+3] == '1' && 
-                             sequence[start+4] == '5' )) 
-                        {
-                          throw AANotFound("Unknown modification for asparagine");
-                        }
-                        res_mass = 116.023977918; break;
-                    // SILAC label and N15 is not very likely
-                    // case 'R': 
-                    // case 'K': 
+                  acc_mass += res_mass;
+                  tmp[scounter] = acc_mass;
+                  scounter++;
+              }
+          }
 
-                    default: 
-                          throw AANotFound("Unknown modification");
-                }
-                //'M[147]':  131.04049 + mass_O), # oxygen
-                //'C[160]':  103.00919 + mass_CAM - mass_H ), # CAM replaces H
-                //'N[115]':  114.04293 - mass_N - mass_H + mass_O
-
-                acc_mass += res_mass;
-                tmp[scounter] = acc_mass;
-                scounter++;
-
-                inside = false;
-            }
-            else if(inside) { }
-            else {
-                //We found a regular AA
-                switch(c) {
-                    case 'A': res_mass = 72.0341486780; break;
-                    case 'C': res_mass = 104.006219678; break;
-                    case 'D': res_mass = 116.023977918; break;
-                    case 'E': res_mass = 130.039627982; break;
-                    case 'F': res_mass = 148.065448806; break;
-                    case 'G': res_mass = 58.018498614; break;
-                    case 'H': res_mass = 140.050016538; break;
-                    case 'I': res_mass = 114.08109887; break;
-                    case 'K': res_mass = 130.0890328; break;
-                    case 'L': res_mass = 114.08109887; break;
-                    case 'M': res_mass = 132.037519806; break;
-                    case 'N': res_mass = 116.036997228; break;
-                    case 'P': res_mass = 98.049798742; break;
-                    case 'Q': res_mass = 130.052647292; break;
-                    case 'R': res_mass = 160.089250596; break;
-                    case 'S': res_mass = 88.029063298; break;
-                    case 'T': res_mass = 102.044713362; break;
-                    case 'V': res_mass = 100.065448806; break;
-                    case 'W': res_mass = 188.073382736; break;
-                    case 'X': res_mass = 114.08109887; break;
-                    case 'Y': res_mass = 164.060363426; break;
-
-                    default: 
-                          throw AANotFound("Unknown amino acid");
-                }
-
-                acc_mass += res_mass;
-                tmp[scounter] = acc_mass;
-                scounter++;
-            }
         } 
+        else if(isotope_mod == N15_ISOTOPEMODIFICATION ) 
+        {
+
+          // using values for N15 isotopic modification 
+          while((c = sequence[j++])) {
+              if(sequence[j] == '[') {
+                  start = j-1;
+                  inside = true;
+              }
+              else if(sequence[j-1] == ']') {
+                  //We found a modification
+                  switch(sequence[start]) {
+                      case 'M': 
+                          if(!(sequence[start+2] == '1' && 
+                               sequence[start+3] == '4' && 
+                               sequence[start+4] == '7' )) 
+                          {
+                            throw AANotFound("Unknown modification for methionine");
+                          }
+                          res_mass = 148.0324344260; break;
+                      case 'C': 
+                          if(!(sequence[start+2] == '1' && 
+                               sequence[start+3] == '6' && 
+                               sequence[start+4] == '0' )) 
+                          {
+                            throw AANotFound("Unknown modification for cysteine");
+                          }
+                          res_mass = 161.027683399; break;
+                      case 'N': 
+                          if(!(sequence[start+2] == '1' && 
+                               sequence[start+3] == '1' && 
+                               sequence[start+4] == '5' )) 
+                          {
+                            throw AANotFound("Unknown modification for asparagine");
+                          }
+                          res_mass = 116.023977918; break;
+                      // SILAC label and N15 is not very likely
+                      // case 'R': 
+                      // case 'K': 
+
+                      default: 
+                            throw AANotFound("Unknown modification");
+                  }
+                  //'M[147]':  131.04049 + mass_O), # oxygen
+                  //'C[160]':  103.00919 + mass_CAM - mass_H ), # CAM replaces H
+                  //'N[115]':  114.04293 - mass_N - mass_H + mass_O
+
+                  acc_mass += res_mass;
+                  tmp[scounter] = acc_mass;
+                  scounter++;
+
+                  inside = false;
+              }
+              else if(inside) { }
+              else {
+                  //We found a regular AA
+                  switch(c) {
+                      case 'A': res_mass = 72.0341486780; break;
+                      case 'C': res_mass = 104.006219678; break;
+                      case 'D': res_mass = 116.023977918; break;
+                      case 'E': res_mass = 130.039627982; break;
+                      case 'F': res_mass = 148.065448806; break;
+                      case 'G': res_mass = 58.018498614; break;
+                      case 'H': res_mass = 140.050016538; break;
+                      case 'I': res_mass = 114.08109887; break;
+                      case 'K': res_mass = 130.0890328; break;
+                      case 'L': res_mass = 114.08109887; break;
+                      case 'M': res_mass = 132.037519806; break;
+                      case 'N': res_mass = 116.036997228; break;
+                      case 'P': res_mass = 98.049798742; break;
+                      case 'Q': res_mass = 130.052647292; break;
+                      case 'R': res_mass = 160.089250596; break;
+                      case 'S': res_mass = 88.029063298; break;
+                      case 'T': res_mass = 102.044713362; break;
+                      case 'V': res_mass = 100.065448806; break;
+                      case 'W': res_mass = 188.073382736; break;
+                      case 'X': res_mass = 114.08109887; break;
+                      case 'Y': res_mass = 164.060363426; break;
+
+                      default: 
+                            throw AANotFound("Unknown amino acid");
+                  }
+
+                  acc_mass += res_mass;
+                  tmp[scounter] = acc_mass;
+                  scounter++;
+              }
+          } 
         }
 
+        // Step 2: generate the fragment ions from the partial ions identified
+        //         above and store them in the series array. The partial ion
+        //         masses are stored in the tmp array and the final result is
+        //         obtained by adding/subtracting the correct mass offsets for
+        //         each ion type.
 
         // see also http://www.matrixscience.com/help/fragmentation_help.html
         // note that the b and y series only go up to y[n-1] and b[n-1] since
@@ -296,8 +313,9 @@ namespace SRMCollider
         if (params.MMinusH2O) series[frg_cnt++] = acc_mass;
         if (params.MMinusNH3) series[frg_cnt++] = acc_mass + MASS_H2O - MASS_NH3;
 
-        // calculate the charged mass of the fragments
+        // Step 3: calculate the charged mass of all the fragments
         for (int j=0; j<frg_cnt; j++) series[j] = (series[j] + (ch-1)*MASS_H)/ch;
+
         return frg_cnt;
     }
 

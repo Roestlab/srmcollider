@@ -164,8 +164,8 @@ namespace SRMCollider
     typedef CGAL::Range_tree_map_traits_2<K, Precursor> Traits;
     typedef CGAL::Range_tree_2<Traits> Range_tree_2_type;
 
-    typedef Traits::Key Key;                
-    typedef Traits::Interval Interval;    
+    typedef Traits::Key Key;
+    typedef Traits::Interval Interval;
 
     struct Rangetree_Q1_RT
     {

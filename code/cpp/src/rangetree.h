@@ -36,6 +36,7 @@
  * http://graphics.stanford.edu/courses/cs368-00-spring/TA/manuals/CGAL/ref-manual2/SearchStructures/Chapter_main.html
  * Q Public Licence http://www.gnu.org/licenses/license-list.html
  * http://www.cgal.org/Manual/latest/doc_html/cgal_manual/packages.html#part_XIII
+ *
 */
 
 #ifndef SRMCOLLIDER_RANGETREE_H
@@ -77,20 +78,24 @@ namespace SRMCollider
     typedef Traits::Key Key;                
     typedef Traits::Interval Interval;    
 
-    struct Rangetree_Q1_RT 
+    struct Rangetree_Q1_RT
     {
-      static boost::shared_ptr<Rangetree_Q1_RT> create () 
-      { 
-        return boost::shared_ptr<Rangetree_Q1_RT>(new Rangetree_Q1_RT); 
+      Rangetree_Q1_RT()
+      {
+        my_rangetree = boost::shared_ptr<Range_tree_2_type>(new Range_tree_2_type);
       }
 
-      void new_rangetree ();
+      // Factory function (creates new object)
+      static boost::shared_ptr<Rangetree_Q1_RT> create ()
+      {
+        return boost::shared_ptr<Rangetree_Q1_RT>(new Rangetree_Q1_RT);
+      }
 
       /* Create the rangetree that will be used throughout. This is essential. The
        * rangetree will stay in place while this module is loaded.
        * The tuples have the following structure:
        *   0
-       *   1 
+       *   1
        *   2 - parent_id
        *   3 - q1_charge
        *   4 - q1
@@ -162,14 +167,19 @@ namespace SRMCollider
     typedef Traits::Key Key;                
     typedef Traits::Interval Interval;    
 
-    struct Rangetree_Q1_RT 
+    struct Rangetree_Q1_RT
     {
-      static boost::shared_ptr<Rangetree_Q1_RT> create () 
-      { 
-        return boost::shared_ptr<Rangetree_Q1_RT>(new Rangetree_Q1_RT); 
+
+      Rangetree_Q1_RT()
+      {
+        my_rangetree = boost::shared_ptr<Range_tree_2_type>(new Range_tree_2_type);
       }
 
-      void new_rangetree ();
+      // Factory function (creates new object)
+      static boost::shared_ptr<Rangetree_Q1_RT> create ()
+      {
+        return boost::shared_ptr<Rangetree_Q1_RT>(new Rangetree_Q1_RT);
+      }
 
       // Create the rangetree that will be used throughout. This is essential
       void create_tree(boost::python::tuple pepids);
@@ -189,10 +199,16 @@ namespace SRMCollider
        * The isotope correction should be computed as:
        *    nr_isotopes_to_consider * mass_difference_of_C13 / minimal_parent_charge
       */
-      boost::python::list query_tree(double a, double b, double c, double d, int max_nr_isotopes, double correction);
-      std::vector< Precursor* > query_tree_c(double a, double b, double c, double d, int max_nr_isotopes, double correction);
+      boost::python::list query_tree(double a, double b,
+                                     double c, double d,
+                                     int max_nr_isotopes, double correction);
+
+      std::vector< Precursor* > query_tree_c(double a, double b,
+                                             double c, double d,
+                                             int max_nr_isotopes, double correction);
 
       boost::shared_ptr<Range_tree_2_type> my_rangetree;
+
     };
 
   }

@@ -155,7 +155,6 @@ class Precursors:
     import c_rangetree
     alltuples = [ (0,0, p.parent_id, p.q1_charge, p.q1, p.ssrcalc) for p in self.precursors]
     r = c_rangetree.Rangetree_Q1_RT.create()
-    r.new_rangetree()
     r.create_tree(tuple(alltuples))
     return r
 
@@ -177,7 +176,6 @@ class Precursors:
     import c_rangetree
     alltuples = self.get_alltuples_extended_rangetree()
     r = c_rangetree.ExtendedRangetree_Q1_RT.create()
-    r.new_rangetree()
     r.create_tree(tuple(alltuples))
     return r
 

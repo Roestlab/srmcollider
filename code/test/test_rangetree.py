@@ -52,17 +52,14 @@ class Test_crangetree(unittest.TestCase):
 
     def test_rangetree_object_empty(self):
             mytree = c_rangetree.Rangetree_Q1_RT.create()
-            mytree.new_rangetree()
 
             #we can create a new tree that is empty
-            mytree.new_rangetree()
             res = mytree.query_tree( self.q1 - 1, self.ssrcalc -1, 
                                          self.q1 + 1,  self.ssrcalc + 1, 1, 0) 
             self.assertEqual( len(res), 0)
 
     def test_rangetree_object(self):
             mytree = c_rangetree.Rangetree_Q1_RT.create()
-            mytree.new_rangetree()
             mytree.create_tree( self.mytuple1 )
 
             #we get our peptide out again with a large window
@@ -83,24 +80,20 @@ class Test_crangetree(unittest.TestCase):
             self.assertEqual( len(res), 0)
 
             #we can create a new tree that is empty
-            mytree.new_rangetree()
             res = mytree.query_tree( self.q1 - 1, self.ssrcalc -1, 
                                          self.q1 + 1,  self.ssrcalc + 1, 1, 0) 
             self.assertEqual( len(res), 0)
 
             mytree2 = c_rangetree.Rangetree_Q1_RT.create()
-            mytree2.new_rangetree()
             res = mytree2.query_tree( self.q1 - 1, self.ssrcalc -1, 
                                          self.q1 + 1,  self.ssrcalc + 1, 1, 0) 
             self.assertEqual( len(res), 0)
 
     def test_rangetree_object_two_trees(self):
             mytree = c_rangetree.Rangetree_Q1_RT.create()
-            mytree.new_rangetree()
             mytree.create_tree( self.mytuple1 )
 
             mytree2 = c_rangetree.Rangetree_Q1_RT.create()
-            mytree2.new_rangetree()
             mytree2.create_tree( self.mytuple2 )
 
             #we get our peptide out again from the first tree

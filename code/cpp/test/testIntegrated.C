@@ -114,7 +114,6 @@ BOOST_AUTO_TEST_CASE( wrap_all_bitwise_3peptides_TEST)
   boost::python::tuple t3 = boost::python::make_tuple("YYLLDYR", 3, 3, 2, 500.0, 25.0, -1,-1, 0);
   boost::python::tuple alltuples = boost::python::make_tuple(t1,t2,t3);
   SRMCollider::ExtendedRangetree::Rangetree_Q1_RT tree;
-  tree.new_rangetree();
   tree.create_tree(alltuples);
 
   // get the transition
@@ -187,7 +186,6 @@ BOOST_AUTO_TEST_CASE( get_non_uis_bitwise_3peptides_TEST)
   boost::python::tuple t3 = boost::python::make_tuple("YYLLDYR", 3, 3, 2, 500.0, 25.0, -1,-1, 0);
   boost::python::tuple alltuples = boost::python::make_tuple(t1,t2,t3);
   SRMCollider::ExtendedRangetree::Rangetree_Q1_RT tree;
-  tree.new_rangetree();
   tree.create_tree(alltuples);
 
   // get the transition

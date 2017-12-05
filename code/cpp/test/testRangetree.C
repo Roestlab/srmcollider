@@ -86,7 +86,6 @@ BOOST_AUTO_TEST_CASE( ExtendedRangetree_TEST_C )
   precursors.push_back(p2);
   precursors.push_back(p3);
   SRMCollider::ExtendedRangetree::Rangetree_Q1_RT tree;
-  tree.new_rangetree();
   tree.create_tree(precursors);
   test_tree_c(tree);
 }
@@ -147,7 +146,6 @@ BOOST_AUTO_TEST_CASE( ExtendedRangetree_TEST )
   boost::python::tuple t3 = boost::python::make_tuple("YYLLDYR", 3, 3, q1_charge,         502.0, 23.0, -1,-1, 0);
   boost::python::tuple alltuples = boost::python::make_tuple(t1,t2,t3);
   SRMCollider::ExtendedRangetree::Rangetree_Q1_RT tree;
-  tree.new_rangetree();
   tree.create_tree(alltuples);
   test_tree(tree);
   test_tree_c(tree);
@@ -163,7 +161,6 @@ BOOST_AUTO_TEST_CASE( SimpleRangetree_TEST )
   boost::python::tuple t3 = boost::python::make_tuple("YYLLDYR", 3, 3, q1_charge,         502.0, 23.0, -1,-1, 0);
   boost::python::tuple alltuples = boost::python::make_tuple(t1,t2,t3);
   SRMCollider::SimpleRangetree::Rangetree_Q1_RT tree;
-  tree.new_rangetree();
   tree.create_tree(alltuples);
   test_tree(tree);
   //test_tree_c(tree); // doesnt exist yet for simple range tree

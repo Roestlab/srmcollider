@@ -110,7 +110,6 @@ int main(int argc, const char ** argv)
   //python::object r_tree = myprecursors.attr("build_extended_rangetree")();
 
   python::tuple alltuples = python::extract<python::tuple>(myprecursors.attr("get_alltuples_extended_rangetree")());
-  rangetree.new_rangetree();
   rangetree.create_tree(alltuples);
   std::cout << "Built a rangetree, starting calculations..." << std::endl;
 

@@ -56,7 +56,6 @@ class_<SRMCollider::SimpleRangetree::Rangetree_Q1_RT,
   boost::shared_ptr<SRMCollider::SimpleRangetree::Rangetree_Q1_RT> >("Rangetree_Q1_RT",init<>())
         .def("create",&SRMCollider::SimpleRangetree::Rangetree_Q1_RT::create )
         .staticmethod("create")
-        .def("new_rangetree",&SRMCollider::SimpleRangetree::Rangetree_Q1_RT::new_rangetree)
         .def("create_tree",&SRMCollider::SimpleRangetree::Rangetree_Q1_RT::create_tree)
         .def("query_tree",&SRMCollider::SimpleRangetree::Rangetree_Q1_RT::query_tree)
     ;
@@ -65,8 +64,6 @@ class_<SRMCollider::ExtendedRangetree::Rangetree_Q1_RT,
   boost::shared_ptr<SRMCollider::ExtendedRangetree::Rangetree_Q1_RT> >("ExtendedRangetree_Q1_RT",init<>())
         .def("create",&SRMCollider::ExtendedRangetree::Rangetree_Q1_RT::create )
         .staticmethod("create")
-        .def("new_rangetree",&SRMCollider::ExtendedRangetree::Rangetree_Q1_RT::new_rangetree)
-        //.def("create_tree",&SRMCollider::ExtendedRangetree::Rangetree_Q1_RT::create_tree) // doesnt work any more since we overloaded create_tree
         .def("create_tree", static_cast<void (SRMCollider::ExtendedRangetree::Rangetree_Q1_RT::*)(python::tuple)> (&SRMCollider::ExtendedRangetree::Rangetree_Q1_RT::create_tree) )
         .def("query_tree",&SRMCollider::ExtendedRangetree::Rangetree_Q1_RT::query_tree)
     ;

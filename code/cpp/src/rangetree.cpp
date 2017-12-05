@@ -35,11 +35,6 @@ namespace SRMCollider
 {
   namespace SimpleRangetree
   {
-    void Rangetree_Q1_RT::new_rangetree  () 
-    {
-      my_rangetree = boost::shared_ptr<Range_tree_2_type>(new Range_tree_2_type); 
-    }
-
     void Rangetree_Q1_RT::create_tree(python::tuple pepids) 
     {
 
@@ -161,14 +156,8 @@ namespace SRMCollider
 
   namespace ExtendedRangetree
   {
-    void Rangetree_Q1_RT::new_rangetree  () 
-    {
-      my_rangetree = boost::shared_ptr<Range_tree_2_type>(new Range_tree_2_type); 
-    }
-
     void Rangetree_Q1_RT::create_tree(python::tuple pepids) 
     {
-
         python::tuple tlist;
         std::vector<Key> InputList;
         int i, q1_charge, isotope_modification;

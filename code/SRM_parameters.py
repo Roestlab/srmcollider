@@ -325,7 +325,11 @@ class SRM_parameters(object):
 
     def get_db(self):
       if self.use_sqlite:
-          import sqlite
+          try:
+            import sqlite
+          except ImportError:
+            import sqlite3 as sqlite
+
           return sqlite.connect(self.sqlite_database)
       else:
           import MySQLdb

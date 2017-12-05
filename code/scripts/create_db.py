@@ -103,7 +103,10 @@ if sqlite_database != '': use_sqlite = True
 else: use_sqlite = False
 
 if use_sqlite:
-    import sqlite
+    try:
+      import sqlite
+    except ImportError:
+      import sqlite3 as sqlite
     conn = sqlite.connect(sqlite_database)
     db = conn
     c = conn.cursor()

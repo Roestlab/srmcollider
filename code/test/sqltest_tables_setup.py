@@ -1,7 +1,11 @@
 import MySQLdb
-import sqlite
 import test_shared
 import test_db, sys
+
+try:
+  import sqlite
+except ImportError:
+  import sqlite3 as sqlite
 
 if sys.argv[1] == "mysql":
     try: 

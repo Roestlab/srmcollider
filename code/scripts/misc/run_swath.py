@@ -28,6 +28,8 @@
 
 
 """
+Used to run SWATH-MS simulations.
+
 select count(distinct parent_key) from result_srmuis where exp_key = 104;
 select count(*) from srmPeptides_mouse where isotope_nr = 0 and q1_charge = 2 and q1 between 400 and 1400;
 

@@ -56,8 +56,9 @@ Order 5, Average non useable UIS 0.0
 """
 
 import sys 
-import collider, progress
 from copy import copy
+from srmcollider import collider, progress
+from srmcollider import Precursors
 
 # count the number of interfering peptides
 count_avg_transitions = False
@@ -118,7 +119,6 @@ if options.insert_mysql:
 
 # Get the precursors
 ###########################################################################
-from precursor import Precursors
 myprecursors = Precursors()
 myprecursors.getFromDB(par, db.cursor(), min_q1 - par.q1_window, max_q1 + par.q1_window)
 if not options.query_peptide_table is None and not options.query_peptide_table == "":

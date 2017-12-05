@@ -47,11 +47,12 @@ Order 5, Average non useable UIS 3.86353977514e-06
 """
 
 import sys 
-import c_integrated, collider, progress
-from precursor import Precursors
 from copy import copy
-
 from optparse import OptionParser, OptionGroup
+
+from srmcollider import c_integrated, collider, progress
+from srmcollider import Precursors
+
 usage = "usage: %prog experiment_key startQ1 endQ1 [options]"
 parser = OptionParser(usage=usage)
 group = OptionGroup(parser, "Run integrated Options")

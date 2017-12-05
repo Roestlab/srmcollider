@@ -47,9 +47,7 @@ import sys, csv
 sys.path.append('external/')
 sys.path.append('.')
 import MySQLdb
-import Residues
-import DDB 
-import collider
+from srmcollider import Residues, DDB, collider
 
 print "Script is deactivated, please edit if you want to use it."
 # Since this drops tables, we done want to run it by accident.
@@ -153,7 +151,10 @@ def insert_peptide_in_db(self, db, peptide_table, transition_group):
         print "skip ", self.get_modified_sequence(), " due to length constraints"
         return
     c.execute(q)
-    self.parent_id = db.insert_id()
+    if use_sqlite:
+        self.parent_id = c.lastrowid
+    else:
+        self.parent_id = db.insert_id()
 
 def get_all_modifications(this_sequence, to_modify, replace_with, max_nr_modifications):
     import re
@@ -202,9 +203,12 @@ if doN15:
 
 # where to store the peptides (in MySQL or sqlite)
 if use_sqlite:
-    try: c.execute( " drop table %(table)s;" % { 'table' : peptide_table} )
-    except Exception: pass
-    c.execute(
+    try:
+        c.execute( " drop table %(table)s;" % { 'table' : peptide_table} )
+    except Exception:
+        pass
+
+    c.executescript(
     """
     create table %(table)s(
         parent_id INT PRIMARY KEY,

@@ -9,14 +9,12 @@ sys.path.append( '..')
 sys.path.append( '.')
 from nose.plugins.attrib import attr
 
-import collider
-
+from srmcollider import collider
+from srmcollider.precursor import Precursor
 from test_shared import get_non_UIS_from_transitions, getnonuis
-from precursor import Precursor
-
 
 try:
-    import c_getnonuis
+    from srmcollider import c_getnonuis
 except ImportError:
     print "=" * 75, """
 Module c_getnonuis is not available. Please compile it if you want to use it.

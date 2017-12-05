@@ -4,8 +4,8 @@ import unittest
 import sys
 sys.path.append( '..')
 sys.path.append( '../external')
-import collider
-from Residues import Residues
+from srmcollider import collider, DDB
+from srmcollider.Residues import Residues
 
 import test_shared 
 
@@ -15,7 +15,6 @@ class Test_fragmentation(unittest.TestCase):
 
         import sys, os, time
 
-        import DDB 
         self.DDB = DDB
         self.R = Residues('mono')
 

@@ -23,7 +23,7 @@
  *
 """
 
-# Get a list of all non-UIS combinbations (using c++ if possible)
+# Get a list of all non-UIS combinations (using c++ if possible)
 def get_nonuis_list(collisions_per_peptide, MAX_UIS):
     non_uis_list = [set() for i in range(MAX_UIS+1)]
     try:
@@ -110,7 +110,7 @@ def _combinationsDiffLen(N):
             j = M-1
             while j >= 0 and index[j] >= N[j]-1: j -= 1
             #j contains the value of the index that needs to be incremented
-            #when we are at the end of the interation, j will be -1
+            #when we are at the end of the iteration, j will be -1
             if j <0: break
             index[j] += 1
             k = j + 1

@@ -6,7 +6,7 @@
  *
  * Program       : SRMCollider
  * Author        : Hannes Roest <roest@imsb.biol.ethz.ch>
- * Date          : 05.02.2011 
+ * Date          : 05.02.2011
  *
  *
  * Copyright (C) 2011 Hannes Roest
@@ -37,21 +37,30 @@ to check whether the measured transitions are still sufficient to form an UIS.
 Accepted inputs are srmAtlas tsv files, mProphet csv files and SPECTRAST
 spectral library files.
 
-Example Workflow: 
+Example Workflow:
     1. go to https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/GetTransitions
-    2. search for some protein, e.g. YLR304C  
-    3. download file "best_peptides..." and open it in some editor 
+    2. search for some protein, e.g. YLR304C
+    3. download file "best_peptides..." and open it in some editor
     4. run "python runcollider.py filename background --srmatlas_tsv --max_uis 10"
 }}}
 """
 
-# All needed Python code lives in ./code so we need to append that to the path
 import MySQLdb, sys, csv, time
-sys.path.append('code')
-import collider, progress, precursor 
-from Residues import Residues
-# File parsing routines
-from Fileparser import parse_srmatlas_file, parse_mprophet_resultfile, parse_mprophet_methodfile, parse_peptidelist
+from optparse import OptionParser, OptionGroup
+
+from srmcollider import collider, progress, precursor
+from srmcollider.Residues import Residues
+from srmcollider.Fileparser import parse_srmatlas_file, parse_mprophet_resultfile, parse_mprophet_methodfile, parse_peptidelist
+
+# determine whether we have the C++ modules available or not
+try:
+    from srmcollider import c_getnonuis
+    from srmcollider import c_integrated
+    use_cpp = True
+    print "Imported the C++ libraries with success"
+except ImportError:
+    use_cpp = False
+    print "Could not import the C++ libraries, please compile them."
 
 # some options that can be changed locally for your convenience
 default_mysql = "~/.my.cnf.srmcollider"
@@ -60,7 +69,6 @@ default_ssrcalc = 'srmcollider.ssrcalc_pr_copy'
 
 # Cmd line option parsing
 # {{{
-from optparse import OptionParser, OptionGroup
 usage = "usage: %prog spectrallibrary [options]\n" +\
         " *      spectrallibrary: path to library WITHOUT the splib ending\n" +\
         "\n" 
@@ -68,7 +76,7 @@ usage = "usage: %prog spectrallibrary [options]\n" +\
 parser = OptionParser(usage=usage)
 group = OptionGroup(parser, "SRMCollider Options", "")
 group.add_option("--safety", dest="safetytransitions", default=3, type="float",
-    help="Number of transitions to add above the absolute minimum. " + 
+    help="Number of transitions to add above the absolute minimum. " +
     "Defaults to 3." , metavar='3')
 group.add_option("-f", "--file", dest="outfile", default='outfile', metavar='out',
     help="Output file"   )
@@ -126,6 +134,11 @@ parser.add_option_group(group)
 
 # parameter evaluation
 # {{{
+
+# Print help page when called without args
+if len(sys.argv) == 1:
+    sys.argv.append("--help")
+
 parameters = collider.SRM_parameters()
 parameters.parse_cmdl_args(parser, default_mysql=default_mysql)
 options, args = parser.parse_args(sys.argv[1:])
@@ -139,6 +152,7 @@ outfile = options.outfile
 logfile = options.logfile
 if len(options.logfile) != 0:
     sys.stdout = open(options.logfile, 'w')
+
 pepmapfile = options.pepmapfile
 libfile = args[0]
 use_experimental_height = False
@@ -150,23 +164,15 @@ if par.max_uis == 0:
     sys.stderr.write(err) 
     sys.exit()
 
-# determine whether we have the C++ modules available or not
-try:
-    import c_getnonuis
-    use_cpp = True
-    print "Imported the C++ libraries with success"
-except ImportError: 
-    use_cpp = False
-    print "Could not import the C++ libraries, please compile them."
-
-db = MySQLdb.connect(read_default_file=par.mysql_config)
+db = par.get_db()
 cursor = db.cursor()
 try:
-    cursor.execute("desc %s" % parameters.peptide_tables[0])
-except Exception:
+    cursor.execute("select * from %s limit 1;" % parameters.peptide_tables[0])
+except Exception as e:
     err = "Could not access database '%s'.\n" % parameters.peptide_tables[0] +\
     "Make sure that your --db_prefix and configuration file are correct.\n" 
     print err
+    print e
     sys.stderr.write(err) 
     sys.exit()
 
@@ -250,7 +256,8 @@ try:
     """ % { 'seqs' : seqs[:-1], 'ssrcalc_table' : options.ssrcalc_table}
     cursor.execute( ssr_query )
     pepmap = dict( cursor.fetchall() )
-except Exception: pepmap = {}
+except Exception:
+    pepmap = {}
 
 # add more SSRCalc values from the pepmap file
 if pepmapfile != '':
@@ -331,7 +338,6 @@ for counter,spectrum in enumerate(library):
 
     if not use_experimental_height and use_cpp:
         # We dont have experimental height data and use C++ code
-        import c_integrated
         old_prec = [(0,p.modified_sequence) for p in precursors]
         min_needed = c_integrated.getMinNeededTransitions(tuple(transitions), tuple(old_prec), 
             par.max_uis, par.q3_window, par.ppm, par)

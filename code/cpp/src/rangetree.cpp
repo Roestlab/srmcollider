@@ -35,11 +35,6 @@ namespace SRMCollider
 {
   namespace SimpleRangetree
   {
-    void Rangetree_Q1_RT::new_rangetree  () 
-    {
-      my_rangetree = boost::shared_ptr<Range_tree_2_type>(new Range_tree_2_type); 
-    }
-
     void Rangetree_Q1_RT::create_tree(python::tuple pepids) 
     {
 
@@ -161,14 +156,8 @@ namespace SRMCollider
 
   namespace ExtendedRangetree
   {
-    void Rangetree_Q1_RT::new_rangetree  () 
-    {
-      my_rangetree = boost::shared_ptr<Range_tree_2_type>(new Range_tree_2_type); 
-    }
-
     void Rangetree_Q1_RT::create_tree(python::tuple pepids) 
     {
-
         python::tuple tlist;
         std::vector<Key> InputList;
         int i, q1_charge, isotope_modification;
@@ -237,10 +226,11 @@ namespace SRMCollider
       Interval win(Interval(K::Point_2(a-correction,b),K::Point_2(c,d)));
       my_rangetree->window_query(win, std::back_inserter(OutputList));
       std::vector<Key>::iterator current=OutputList.begin();
-      while(current!=OutputList.end()){
-
+      while(current != OutputList.end())
+      {
           q1 = current->first[0];
-          charge = current->second.q1_charge;
+          Precursor * prec = &current->second;
+          charge = prec->q1_charge;
           proceed = false;
           // check whether there are any relevant isotopes, otherwise exclude this hit
           for (iso=0; iso<=max_nr_isotopes; iso++) {
@@ -251,7 +241,7 @@ namespace SRMCollider
               }
           }
 
-          if(proceed) {result.push_back( &current->second);}
+          if(proceed) {result.push_back(prec);}
           current++;
       }
       return result;

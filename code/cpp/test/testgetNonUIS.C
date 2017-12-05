@@ -30,7 +30,7 @@
 #include <srmcollider.h>
 #include <srmcolliderLib.h>
 
-#include <py/getNonUis.cpp>
+#include <py/py_getNonUis.cpp>
 
 // Other libraries 
 #include <boost/test/unit_test.hpp>

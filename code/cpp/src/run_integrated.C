@@ -31,7 +31,7 @@
 #include <rangetree.h>
 
 // We dont make a library out of these ... 
-#include <py/getNonUis.cpp>
+#include <py/py_getNonUis.cpp>
 #include <py/py_integratedrun.cpp>
 
 // Including headers from CGAL 
@@ -75,12 +75,12 @@ int main(int argc, const char ** argv)
   // now time to insert the current working directory into the Python search
   // path so module search can take advantage.  This must happen after Python
   // has been initialised
-  boost::filesystem::path workingDir = boost::filesystem3::complete("./").normalize();
+  boost::filesystem::path workingDir = boost::filesystem::complete("./").normalize();
   // TODO use filesystem or filesystem3
   PyObject* sysPath = PySys_GetObject("path");
   PyList_Insert( sysPath, 0, PyString_FromString(workingDir.string().c_str()));
 
-  workingDir = boost::filesystem3::complete("../").normalize();
+  workingDir = boost::filesystem::complete("../").normalize();
   PyList_Insert( sysPath, 0, PyString_FromString(workingDir.string().c_str()));
 
   python::object ignored;
@@ -110,7 +110,6 @@ int main(int argc, const char ** argv)
   //python::object r_tree = myprecursors.attr("build_extended_rangetree")();
 
   python::tuple alltuples = python::extract<python::tuple>(myprecursors.attr("get_alltuples_extended_rangetree")());
-  rangetree.new_rangetree();
   rangetree.create_tree(alltuples);
   std::cout << "Built a rangetree, starting calculations..." << std::endl;
 

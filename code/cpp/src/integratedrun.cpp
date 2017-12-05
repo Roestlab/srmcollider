@@ -57,7 +57,7 @@ namespace SRMCollider
 
               // go through all fragments of this precursor
               for (k=0; k<fragcount; k++) {
-                  if(fabs(q3-series[k]) < q3used ) {
+                  if (fabs(q3-series[k]) < q3used ) {
                       //left bitshift == 2^i
                       one = 1;
                       currenttmp |= one << i;
@@ -89,7 +89,7 @@ namespace SRMCollider
               //for (k=0; k<fragcount; k++) 
               for (k=0; k<result.size(); k++) 
               {
-                  if(fabs(q3-result[k]) < q3used ) {
+                  if (fabs(q3-result[k]) < q3used ) {
                       //left bitshift == 2^i
                       one = 1;
                       currenttmp |= one << i;
@@ -198,7 +198,6 @@ namespace SRMCollider
 
       while(current!=OutputList.end())
       {
-
         SRMPrecursor& p = current->second;
         p.q1 = current->first[0];
 

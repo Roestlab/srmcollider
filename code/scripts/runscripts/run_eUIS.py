@@ -35,15 +35,15 @@ At least one eUIS of order 2 : 882  which is 100.0 %
 Random probability to choose good 0.950950173093
 Average lost in strike 3 0.011721581048
 Average without strike 3 0.037328245859
-
 """
 
 import time
 import sys 
-import c_rangetree, c_getnonuis
-import collider
-import progress
-from collider import thisthirdstrike
+
+from srmcollider import c_rangetree, c_getnonuis
+from srmcollider import collider, progress
+from srmcollider.collider import thisthirdstrike
+from srmcollider import Precursors
 
 from optparse import OptionParser, OptionGroup
 usage = "usage: %prog experiment_key startQ1 endQ1 [options]"
@@ -89,7 +89,6 @@ skip_strike2 = True
 
 # Get the precursors
 ###########################################################################
-from precursor import Precursors
 myprecursors = Precursors()
 myprecursors.getFromDB(par, db.cursor(), min_q1 - par.q1_window, max_q1 + par.q1_window)
 if options.GRAVY: myprecursors.use_GRAVY_scores()

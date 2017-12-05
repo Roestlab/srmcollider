@@ -169,11 +169,19 @@ namespace SRMCollider
      * instead of right to left. Whereas b_series[0] holds the b-1 ion, y_series[0]
      * holds the y-(n-1) ion and y_series[n-1] holds the y-1 ion.
      */
-    int calculate_fragment_masses(const std::string& sequence, double* tmp, 
-            double* series, double ch, const SRMParameters& params, int isotope_mod);
+    int calculate_fragment_masses(const std::string& sequence,
+                                  double* tmp,
+                                  double* series,
+                                  double ch,
+                                  const SRMParameters& params,
+                                  int isotope_mod);
 
-    void calculate_transitions_with_charge(SRMPrecursor& p, std::vector<int>& charges, std::vector<SRMTransition>& result, 
-        double* tmp, double* series, double q3_low, double q3_high, const SRMParameters& param);
+    void calculate_transitions_with_charge(SRMPrecursor& p,
+                                           std::vector<int>& charges,
+                                           std::vector<SRMTransition>& result,
+                                           double* tmp, double* series, 
+                                           double q3_low, double q3_high,
+                                           const SRMParameters& param);
   }
 
 }

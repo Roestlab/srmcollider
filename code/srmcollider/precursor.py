@@ -29,7 +29,13 @@ class Precursor:
       return self.transition_group
 
   def initialize(self, modified_sequence, transition_group, parent_id, q1_charge, q1, ssrcalc, modifications, missed_cleavages, isotopically_modified):
-    self.modified_sequence      = modified_sequence      
+
+    # Sqlite3 now returns unicode strings, handle these here
+    if isinstance(modified_sequence, str):
+        self.modified_sequence = modified_sequence
+    elif isinstance(modified_sequence, unicode):
+        self.modified_sequence = modified_sequence.encode("utf8")
+
     self.transition_group       = transition_group       
     self.parent_id              = parent_id              
     self.q1_charge              = q1_charge              
@@ -77,7 +83,7 @@ class Precursor:
   def fix_mprophet_sequence_bug(self):
     self.modified_sequence = self.modified_sequence.replace('[C160]', 'C[160]').replace('C[+57]', 'C[160]')
 
-class Precursors:
+class PrecursorAccess:
   """A class that abstracts getting and receiving precursors from the db"""
 
   def __init__(self):
@@ -149,7 +155,6 @@ class Precursors:
     import c_rangetree
     alltuples = [ (0,0, p.parent_id, p.q1_charge, p.q1, p.ssrcalc) for p in self.precursors]
     r = c_rangetree.Rangetree_Q1_RT.create()
-    r.new_rangetree()
     r.create_tree(tuple(alltuples))
     return r
 
@@ -171,7 +176,6 @@ class Precursors:
     import c_rangetree
     alltuples = self.get_alltuples_extended_rangetree()
     r = c_rangetree.ExtendedRangetree_Q1_RT.create()
-    r.new_rangetree()
     r.create_tree(tuple(alltuples))
     return r
 
@@ -212,3 +216,4 @@ class Precursors:
     return c_getnonuis.calculate_collisions_per_peptide_other_ion_series( 
         transitions, globalprecursors, par, q3_low, q3_high, par.q3_window, par.ppm, forceFragmentChargeCheck)
 
+Precursors = PrecursorAccess

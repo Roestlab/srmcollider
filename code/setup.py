@@ -68,7 +68,7 @@ sudo ln -s /usr/lib/libboost_python-mt.so /usr/lib/libboost_python.so
 #compared to the itertools.combinations there is mainly a speed advantage if the
 #strings to be written are short
  
-from distutils.core import setup
+from setuptools import setup
 from distutils.extension import Extension
 
 # if your CGAL libraries are somewhere else, please tell us here
@@ -78,6 +78,12 @@ CGAL_libraries = '.'
 boost_libdir = '.'
 boost_includedir = '.'
 
+import fnmatch, os
+all_scripts = []
+for root, dirnames, filenames in os.walk('scripts'):
+  for filename in fnmatch.filter(filenames, '*.py'):
+      all_scripts.append(os.path.join(root, filename))
+
 setup(name="srmcollider",
     url = "http://www.srmcollider.org", 
     version = "1.4.2",
@@ -85,29 +91,34 @@ setup(name="srmcollider",
     author_email = "roest@imsb.biol.ethz.ch",
     requires=["MySQLdb", "sqlite"],
 
+    packages = ['srmcollider', 'srmcollider-webapp'],
+    package_dir = {
+        'srmcollider-webapp': 'cgi-scripts',
+    },
+
+    scripts=all_scripts,
     ext_modules=[
-        Extension("c_combinations", ["cpp/py/py_combinations.cpp"],
-            include_dirs=["./cpp", boost_includedir],
+        Extension("srmcollider/c_combinations", ["cpp/py/py_combinations.cpp"],
+            include_dirs=["./cpp/", "./cpp/src", boost_includedir],
             library_dirs=["/usr/local/lib/python2.6/dist-packages/", boost_libdir],
             libraries = ["boost_python"]
             ),
-        Extension("c_getnonuis", ["cpp/py/py_getNonUis.cpp"], 
-            include_dirs=["./cpp", boost_includedir],
+        Extension("srmcollider/c_getnonuis", ["cpp/py/py_getNonUis.cpp"], 
+            include_dirs=["./cpp/", "./cpp/src", boost_includedir],
             library_dirs=["/usr/local/lib/python2.6/dist-packages/", boost_libdir],
             runtime_library_dirs=["./", "../"],
             libraries = ["boost_python"]),
-        Extension("c_rangetree", ["cpp/py/py_rangetree.cpp"],
-            include_dirs=["./cpp", CGAL_libraries + '/include/', boost_includedir],
+        Extension("srmcollider/c_rangetree", ["cpp/py/py_rangetree.cpp"],
+            include_dirs=["./cpp/", "./cpp/src", CGAL_libraries + '/include/', boost_includedir],
             library_dirs=[CGAL_libraries +'/lib/', boost_libdir],
             libraries = ["boost_python"],
             ),
-        Extension("c_integrated", ["cpp/py/py_integratedrun.cpp"], 
-            include_dirs=["./cpp", CGAL_libraries + '/include/', boost_includedir],
+        Extension("srmcollider/c_integrated", ["cpp/py/py_integratedrun.cpp"], 
+            include_dirs=["./cpp/", "./cpp/src", CGAL_libraries + '/include/', boost_includedir],
             library_dirs=[CGAL_libraries +'/lib/', boost_libdir],
             runtime_library_dirs=["./", "../"],
             libraries = ["boost_python"]
             ),
     ],
-     ) 
-
+    )
 

@@ -12,16 +12,16 @@ test/testRangetree
 test/testeUIS
 test/testLibrary
 test/testCombinatorics
-run_integrated
+src/run_integrated
 )
 
 # All classes that will go into the library
 set(my_sources
-  calculate_eUIS.cpp
-  combinatorics.h
-  srmcolliderLib.cpp
-  integratedrun.cpp
-  rangetree.cpp
+  src/calculate_eUIS.cpp
+  src/combinatorics.h
+  src/srmcolliderLib.cpp
+  src/integratedrun.cpp
+  src/rangetree.cpp
 )
 
 # CGAL is used header-only, no need for the libraries
@@ -29,7 +29,7 @@ find_package(CGAL REQUIRED)
 message("Include dirs of CGAL: " ${CGAL_INCLUDE_DIRS} )
 # message("Libs of CGAL: " ${CGAL_LIBRARIES} )
 
-find_package(PythonLibs REQUIRED)
+FIND_PACKAGE(PythonLibs 2.7 REQUIRED)
 message("Include dirs of Python: " ${PYTHON_INCLUDE_DIRS} )
 message("Libs of Python: " ${PYTHON_LIBRARIES} )
 
@@ -41,6 +41,7 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
   ${PYTHON_INCLUDE_DIRS}
   ${CGAL_INCLUDE_DIRS}
+  "./src/"
   "./"
 )
 

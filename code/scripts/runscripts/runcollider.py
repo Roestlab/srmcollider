@@ -164,15 +164,15 @@ if par.max_uis == 0:
     sys.stderr.write(err) 
     sys.exit()
 
-
-db = MySQLdb.connect(read_default_file=par.mysql_config)
+db = par.get_db()
 cursor = db.cursor()
 try:
-    cursor.execute("desc %s" % parameters.peptide_tables[0])
-except Exception:
+    cursor.execute("select * from %s limit 1;" % parameters.peptide_tables[0])
+except Exception as e:
     err = "Could not access database '%s'.\n" % parameters.peptide_tables[0] +\
     "Make sure that your --db_prefix and configuration file are correct.\n" 
     print err
+    print e
     sys.stderr.write(err) 
     sys.exit()
 
@@ -256,7 +256,8 @@ try:
     """ % { 'seqs' : seqs[:-1], 'ssrcalc_table' : options.ssrcalc_table}
     cursor.execute( ssr_query )
     pepmap = dict( cursor.fetchall() )
-except Exception: pepmap = {}
+except Exception:
+    pepmap = {}
 
 # add more SSRCalc values from the pepmap file
 if pepmapfile != '':

@@ -10,7 +10,13 @@ script_dirname = os.path.dirname(os.path.abspath(__file__))
 PEPTIDE_TABLE_NAME = "srmPeptides_test"
 USE_SQLITE = True
 
-from precursor import Precursor
+from srmcollider.precursor import Precursor
+from srmcollider.SRM_parameters import SRM_parameters
+
+import sys
+sys.path.extend(['..'])
+from srmcollider import uis_functions
+
 class ThreePeptideExample():
 
     precursor = Precursor(modified_sequence='YYLLDYR', q1=503.256187374, q1_charge=2, transition_group = 34, parent_id = 69, isotopically_modified=0, ssrcalc = 25)
@@ -320,7 +326,6 @@ runpep_obj2 = Precursor( q1 = runpep2['q1'], modified_sequence =
   runpep2['mod_sequence'], transition_group = runpep2['transition_group'], 
   isotopically_modified = 0, ssrcalc = runpep2['ssrcalc']) 
 
-from SRM_parameters import SRM_parameters
 def get_default_setup_parameters():
         par = SRM_parameters()
         par.q1_window = 1 / 2.0
@@ -473,8 +478,8 @@ def get_non_UIS_from_transitions(transitions, collisions, par, MAX_UIS,
     needs to force the function to return a set.
     """
     try: 
-        #using C++ functions for this == faster
-        import c_getnonuis
+        # using C++ functions for this == faster
+        import srmcollider.c_getnonuis
         non_uis_list = [{} for i in range(MAX_UIS+1)]
         collisions_per_peptide = getnonuis(transitions, collisions, par.q3_window, par.ppm)
         for order in range(1,MAX_UIS+1):
@@ -488,9 +493,6 @@ def get_non_UIS_from_transitions(transitions, collisions, par, MAX_UIS,
         #old way of doing it
         return get_non_UIS_from_transitions_old(transitions, collisions, par, MAX_UIS)
 
-import sys
-sys.path.extend(['..'])
-import uis_functions
 def get_non_UIS_from_transitions_old(transitions, collisions, par, MAX_UIS, unsorted=False):
     """ Get all combinations that are not UIS """
     #collisions

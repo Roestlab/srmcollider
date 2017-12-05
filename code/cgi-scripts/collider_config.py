@@ -42,7 +42,7 @@
 # synchronized.
 
 # [General Options]
-SRMCOLLIDER_HOME = '/home/srmcollider/srmcollider/code' # direct to where collider.py lives
+SRMCOLLIDER_HOME = '/home/srmcollider/srmcollider/code/srmcollider/' # directory where collider.py lives
 
 # [Database setup]
 default_mysql = "/home/srmcollider/.srm.cnf" # custom .my.cnf

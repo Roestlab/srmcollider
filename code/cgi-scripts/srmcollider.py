@@ -30,7 +30,7 @@
 from collider_config import *
 
 if debug:
-	import cgitb; cgitb.enable()
+    import cgitb; cgitb.enable()
 
 
 ###########################################################################

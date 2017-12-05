@@ -83,7 +83,7 @@ class Precursor:
   def fix_mprophet_sequence_bug(self):
     self.modified_sequence = self.modified_sequence.replace('[C160]', 'C[160]').replace('C[+57]', 'C[160]')
 
-class Precursors:
+class PrecursorAccess:
   """A class that abstracts getting and receiving precursors from the db"""
 
   def __init__(self):
@@ -216,3 +216,4 @@ class Precursors:
     return c_getnonuis.calculate_collisions_per_peptide_other_ion_series( 
         transitions, globalprecursors, par, q3_low, q3_high, par.q3_window, par.ppm, forceFragmentChargeCheck)
 
+Precursors = PrecursorAccess

@@ -1,0 +1,7 @@
+
+[client]
+# The following password will be sent to all standard MySQL clients
+password=""
+user=root
+database=srmcollider
+

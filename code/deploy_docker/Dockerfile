@@ -38,7 +38,6 @@ COPY .srm.cnf /home/srmcollider/
 RUN chown www-data:www-data /var/www
 WORKDIR /home/srmcollider/
 
-
 # Fix script
 RUN sed -i '/exit/d' /home/srmcollider/srmcollider/code/scripts/misc/create_db.py
 
@@ -47,6 +46,7 @@ RUN mkdir ssrcalc
 WORKDIR /home/srmcollider/ssrcalc
 RUN wget https://svn.code.sf.net/p/sashimi/code/tags/release_4-3-1/trans_proteomic_pipeline/perl/SSRCalc3.par
 RUN wget https://svn.code.sf.net/p/sashimi/code/tags/release_4-3-1/trans_proteomic_pipeline/perl/SSRCalc3.pl
+RUN chmod a+x /home/srmcollider/ssrcalc/*
 WORKDIR /home/srmcollider/
 
 WORKDIR /home/srmcollider/srmcollider/code/scripts/misc/

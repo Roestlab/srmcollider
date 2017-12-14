@@ -1,3 +1,5 @@
+from collider_config import collider_script_name
+
 header =  """
 <!DOCTYPE html PUBtdC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
@@ -41,15 +43,14 @@ topdiv = """
 </div>
 """
 
-
 warm_welcome = topdiv % """
     <span class="active-nav"> 
-        <a href="srmcollider.py">Collider </a>
+        <a href="%s">Collider </a>
     </span>
     <span class="inactive-nav"> <a href="download.html">Download </a> </span>
     <span class="inactive-nav"> <a href="about.html">About </a> </span>
     <span class="inactive-nav"> <a href="instructions.html">Instructions </a> </span>
-"""
+""" % collider_script_name
 
 
 

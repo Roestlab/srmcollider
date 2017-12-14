@@ -28,6 +28,7 @@
 
 # All changes that should be done by the user are in the collider_config.py
 from collider_config import *
+from collider_config import collider_script_name
 
 if debug:
     import cgitb; cgitb.enable()
@@ -42,18 +43,21 @@ import random, string
 import cgi
 import os
 
-sys.path.append(SRMCOLLIDER_HOME)
-import DDB
-import collider
-import c_getnonuis
 import sharedhtml as shared
-from precursor import Precursor
-from srmcollider_website_helper import getSRMParameter, get_ssrcalc_values
-from srmcollider_website_helper import unique_values, write_csv_row
-from srmcollider_website_helper import SRMColliderController
+
+sys.path.append(SRMCOLLIDER_HOME)
+import srmcollider.collider as collider
+import srmcollider.c_getnonuis as c_getnonuis
+from srmcollider.precursor import Precursor
+from srmcollider.srmcollider_website_helper import getSRMParameter, get_ssrcalc_values
+from srmcollider.srmcollider_website_helper import unique_values, write_csv_row
+from srmcollider.srmcollider_website_helper import SRMColliderController
 
 backw_compatible = False
 rounding_precision = 4
+
+# form_action = "/srmcollider/collider.py"
+form_action = "/srmcollider/%s" % collider_script_name
 
 db = MySQLdb.connect(read_default_file=default_mysql)
 
@@ -422,7 +426,7 @@ else:
 
   print shared.toggleDisplay # Javascript function to toggle a div
   print """
-<form action="/srmcollider/srmcollider.py" method="post">
+<form action="%(form_action)s" method="post">
     <p class='input_field'>
         <label for="peptides">Please enter the peptide sequences here (see <a href="instructions.html">Instructions</a> for help):</label><br />
         <textarea id="pep_input" name="peptides" rows="20">%(textfield_peptides)s</textarea>
@@ -533,8 +537,11 @@ peptides are fully tryptic only <br/>
 To try this tool, you could use the following sample peptides:
 <br/>%(sample_peptides_html)s    
 </!-->
-""" % {'sample_peptides_html' : sample_peptides_html, 'genome_select':
-       genome_select, 'ion_series' : html_ions, 'textfield_peptides' : textfield_peptides} 
+""" % {'sample_peptides_html' : sample_peptides_html, 
+        'genome_select': genome_select, 
+        'ion_series' : html_ions, 
+        'form_action' : form_action, 
+        'textfield_peptides' : textfield_peptides} 
 
 print "</div>"
 print """

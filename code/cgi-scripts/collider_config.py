@@ -60,6 +60,7 @@ myCSVFile_ = '/var/websites/srmcollider/documents/srmcollider_'
 myUIS_CSVFile_ = '/var/websites/srmcollider/documents/uis_srmcollider_'
 myUIS_CSVFile_rel_ = '/../documents/uis_srmcollider_'
 myCSVFile_rel_ = '/../documents/srmcollider_'
+collider_script_name = "collider.py"
 
 # [Available genomes]
 # If you want to add additional genomes, edit the genome_select HTML and the

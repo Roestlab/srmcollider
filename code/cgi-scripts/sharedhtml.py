@@ -33,7 +33,7 @@ topdiv = """
     SRM Collider
     </div>
     <div class="version">
-    version 1.4
+    version 1.5
     </br>
     Hannes R&ouml;st 2012
     </div>

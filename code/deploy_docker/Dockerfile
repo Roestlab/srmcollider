@@ -2,16 +2,13 @@ FROM ubuntu:16.04
 
 RUN apt-get -y update
 RUN apt-get -y install python python-dev python-setuptools
-RUN apt-get -y install g++ make 
 RUN apt-get -y install python python-mysqldb python-biopython 
+RUN apt-get -y install python-matplotlib python-numpy python-scipy python-matplotlib
 RUN apt-get -y install python-dev libcgal-dev libboost-python-dev
 RUN apt-get -y install libboost-filesystem-dev libboost-test-dev libboost-system-dev
-RUN apt-get -y install git
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server
 RUN apt-get -y install apache2 libapache2-mod-python
-RUN apt-get -y install python-matplotlib python-numpy python-scipy python-matplotlib
-RUN apt-get -y install vim
-RUN apt-get -y install wget
+RUN apt-get -y install g++ make git wget
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server
 
 # Download and install srmcollider
 WORKDIR /home/srmcollider/

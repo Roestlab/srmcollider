@@ -57,4 +57,8 @@ WORKDIR /home/srmcollider/
 # Get entry point
 COPY entrypoint.sh /home/srmcollider/
 RUN chmod a+x  /home/srmcollider/entrypoint.sh
+# ENTRYPOINT entrypoint.sh
+# start with 
+## sudo docker run -it -p 8080:80 30a67b7a0058 /bin/bash
+
 

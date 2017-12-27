@@ -12,7 +12,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server
 
 # Download and install srmcollider
 WORKDIR /home/srmcollider/
-WORKDIR /home/srmcollider/
 # RUN git clone https://github.com/Roestlab/srmcollider.git
 RUN git clone https://github.com/Roestlab/srmcollider.git && cd srmcollider && git checkout feature/webtool
 
@@ -59,10 +58,9 @@ RUN bash load_human_pa.sh
 WORKDIR /home/srmcollider/
 
 # 7) Set up entry point
-COPY entrypoint.sh /home/srmcollider/
+RUN cp /home/srmcollider/srmcollider/code/deploy_docker/entrypoint.sh /home/srmcollider/
 RUN chmod a+x /home/srmcollider/entrypoint.sh
 ENTRYPOINT /home/srmcollider/entrypoint.sh
 
 # sudo docker run -dit -p 8080:80 srmcollider
-
 

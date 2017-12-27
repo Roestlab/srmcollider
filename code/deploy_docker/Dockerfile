@@ -13,6 +13,8 @@ RUN apt-get -y install python-matplotlib python-numpy python-scipy python-matplo
 RUN apt-get -y install vim
 RUN apt-get -y install wget
 
+# Download and install srmcollider
+WORKDIR /home/srmcollider/
 WORKDIR /home/srmcollider/
 # RUN git clone https://github.com/Roestlab/srmcollider.git
 RUN git clone https://github.com/Roestlab/srmcollider.git && cd srmcollider && git checkout feature/webtool
@@ -21,27 +23,31 @@ WORKDIR /home/srmcollider/srmcollider/code/
 RUN python setup.py build
 RUN python setup.py install
 
-# setup web scripts
+# Setup web scripts
+
+# 1) copy to directories
 RUN mkdir -p /var/webapps/srmcollider/
-RUN mkdir -p /var/websites/srmcollider
+RUN mkdir -p /var/websites/srmcollider/
 RUN cp -r cgi-scripts /var/webapps/srmcollider/web_scripts/
 RUN cp -r css /var/websites/srmcollider/stylesheets/
 RUN mkdir -p /var/websites/srmcollider/documents/
+
+# 2) Prepare apache
 RUN chown www-data:www-data /var/websites/srmcollider/documents/
 RUN rm /etc/apache2/sites-enabled/000-default.conf
-COPY apache_config /etc/apache2/sites-enabled/srmcollider.conf 
+RUN cp deploy_docker/apache_config /etc/apache2/sites-enabled/srmcollider.conf
 RUN a2enmod cgi
 
-COPY collider_config.py /var/webapps/srmcollider/web_scripts/
-COPY .srm.cnf /home/srmcollider/
-# RUN mv /var/webapps/srmcollider/web_scripts/srmcollider.py /var/webapps/srmcollider/web_scripts/collider.py
+# 3) Prepare collider config and mysql config
+RUN cp deploy_docker/collider_config.py /var/webapps/srmcollider/web_scripts/
+RUN cp deploy_docker/.srm.cnf /home/srmcollider/
 RUN chown www-data:www-data /var/www
 WORKDIR /home/srmcollider/
 
-# Fix script
+# 4) Fix script
 RUN sed -i '/exit/d' /home/srmcollider/srmcollider/code/scripts/misc/create_db.py
 
-# Install SSRCalc
+# 5) Install SSRCalc
 RUN mkdir ssrcalc
 WORKDIR /home/srmcollider/ssrcalc
 RUN wget https://svn.code.sf.net/p/sashimi/code/tags/release_4-3-1/trans_proteomic_pipeline/perl/SSRCalc3.par
@@ -49,16 +55,17 @@ RUN wget https://svn.code.sf.net/p/sashimi/code/tags/release_4-3-1/trans_proteom
 RUN chmod a+x /home/srmcollider/ssrcalc/*
 WORKDIR /home/srmcollider/
 
+# 6) Load sample data (human peptide atlas)
 WORKDIR /home/srmcollider/srmcollider/code/scripts/misc/
-COPY load_human_pa.sh .
+RUN cp /home/srmcollider/srmcollider/code/deploy_docker/load_human_pa.sh .
 RUN bash load_human_pa.sh
 WORKDIR /home/srmcollider/
 
-# Get entry point
+# 7) Set up entry point
 COPY entrypoint.sh /home/srmcollider/
-RUN chmod a+x  /home/srmcollider/entrypoint.sh
-# ENTRYPOINT entrypoint.sh
-# start with 
-## sudo docker run -it -p 8080:80 30a67b7a0058 /bin/bash
+RUN chmod a+x /home/srmcollider/entrypoint.sh
+ENTRYPOINT /home/srmcollider/entrypoint.sh
+
+# sudo docker run -dit -p 8080:80 srmcollider
 
 

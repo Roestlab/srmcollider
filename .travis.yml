@@ -34,7 +34,7 @@ install:
   - pip install -U Cython
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then pip install pysqlite; fi
   - travis_retry cd code && python setup.py develop && python setup.py install
- - "cd code/test && python sqltest_tables_setup.py sqlite"
+  - "cd code/test && python sqltest_tables_setup.py sqlite"
 script: 
   # Disable the rpy2 tests for Python 3.x
   # Disable the Cython tests for Python 3.x as they only work under 2.x

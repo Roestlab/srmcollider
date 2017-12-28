@@ -37,7 +37,7 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then pip install pysqlite; fi
   - "ls"
   - "pwd"
-  - "cd code/test && python sqltest_tables_setup.py sqlite"
+  - "cd code/test && python sqltest_tables_setup.py sqlite && cd ../.."
   - travis_retry cd code && python setup.py develop && python setup.py install
 
 script: 

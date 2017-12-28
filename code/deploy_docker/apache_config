@@ -1,0 +1,32 @@
+<VirtualHost *:80>
+
+    # ServerName srmcollider.org
+    # ServerAlias www.srmcollider.org
+
+    DocumentRoot /var/websites/srmcollider
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    ScriptAlias /srmcollider/ /var/webapps/srmcollider/web_scripts/
+    <Directory "/var/webapps/srmcollider/web_scripts">
+        AllowOverride None
+        AddHandler cgi-script .py
+        Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch +IncludesNoExec
+        Order allow,deny
+        Allow from all
+        Require all granted
+    </Directory>
+
+    ErrorLog /var/log/apache2/srmcollider_error.log
+
+    # Possible values include: debug, info, notice, warn, error, crit,
+    # alert, emerg.
+    LogLevel warn
+
+    CustomLog /var/log/apache2/srmcollider_access.log combined
+
+</VirtualHost>
+

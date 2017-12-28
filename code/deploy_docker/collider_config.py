@@ -68,13 +68,11 @@ collider_script_name = "collider.py"
 genomes_that_require_N15_data = ['yeastN15']
 
 genome_select = """
-    <option value="yeast">Yeast (tryptic)</option>
-    <option value="human">Human (tryptic)</option>
+    <option value="human">Human (PeptideAtlas)</option>
 """
 
 db_tables_map = {
-  'yeast': 'yeast_oxMetDeamid_miss1',
-  'human': 'human_oxMetDeamid_miss1',
+  'human': 'human_PeptideAtlas',
 }
 
 # set to True to enable debugging output on the web interface.

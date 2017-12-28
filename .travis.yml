@@ -1,0 +1,42 @@
+sudo: false
+dist: trusty
+language: python
+python:
+  - "2.7"
+#   - "3.5"
+
+cache:
+  - apt
+
+addons:
+   apt:
+      packages:
+         - libcgal-dev 
+         - libboost-python-dev
+         - libboost-filesystem-dev 
+         - libboost-test-dev 
+         - libboost-system-dev
+         - python-dev 
+         - python-setuptools
+         - python-biopython 
+         - python-matplotlib 
+         - python-numpy 
+         - python-scipy 
+         - python-matplotlib
+
+install:
+  # make sure we have the newest setuptools
+  - pip install -U setuptools
+  - pip install mysqlclient
+  - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then pip install pysqlite; fi
+  - "cd code/test && python sqltest_tables_setup.py sqlite && cd ../.."
+  - travis_retry cd code && python setup.py develop && python setup.py install
+
+script: 
+  # Disable the rpy2 tests for Python 3.x
+  # Disable the Cython tests for Python 3.x as they only work under 2.x
+  - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then nosetests -a '!mysql' -w test/; fi
+  ## - if [[ $TRAVIS_PYTHON_VERSION == 3.5* ]]; then nosetests -a '!mysql' -w test/; fi
+
+cache: pip
+

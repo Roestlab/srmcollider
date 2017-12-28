@@ -33,6 +33,7 @@ install:
   # make sure we have the newest setuptools
   - pip install -U setuptools
   - pip install -U Cython
+  - pip install mysqlclient
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then pip install pysqlite; fi
   - "ls"
   - "pwd"

@@ -3,9 +3,7 @@ dist: trusty
 language: python
 python:
   - "2.7"
-#   - "3.4"
 #   - "3.5"
-#   - "3.6"
 
 cache:
   - apt
@@ -20,23 +18,17 @@ addons:
          - libboost-system-dev
          - python-dev 
          - python-setuptools
-         - python-mysqldb 
          - python-biopython 
          - python-matplotlib 
          - python-numpy 
          - python-scipy 
          - python-matplotlib
-         - python-sqlite
-         - python-mysqldb
 
 install:
   # make sure we have the newest setuptools
   - pip install -U setuptools
-  - pip install -U Cython
   - pip install mysqlclient
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then pip install pysqlite; fi
-  - "ls"
-  - "pwd"
   - "cd code/test && python sqltest_tables_setup.py sqlite && cd ../.."
   - travis_retry cd code && python setup.py develop && python setup.py install
 
@@ -44,8 +36,7 @@ script:
   # Disable the rpy2 tests for Python 3.x
   # Disable the Cython tests for Python 3.x as they only work under 2.x
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then nosetests -a '!mysql' -w test/; fi
-  ## - if [[ $TRAVIS_PYTHON_VERSION == 3.4* ]]; then nosetests -a '!rpy2,!cython' -w test/; fi
-  ## - if [[ $TRAVIS_PYTHON_VERSION == 3.5* ]]; then nosetests -a '!rpy2,!cython' -w test/; fi
-  ## - if [[ $TRAVIS_PYTHON_VERSION == 3.6* ]]; then nosetests -a '!rpy2,!cython' -w test/; fi
+  ## - if [[ $TRAVIS_PYTHON_VERSION == 3.5* ]]; then nosetests -a '!mysql' -w test/; fi
+
 cache: pip
 

@@ -27,6 +27,7 @@ addons:
          - python-scipy 
          - python-matplotlib
          - python-sqlite
+         - python-mysqldb
 
 install:
   # make sure we have the newest setuptools

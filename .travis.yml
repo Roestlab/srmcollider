@@ -35,7 +35,7 @@ install:
   # make sure we have the newest setuptools
   - pip install -U setuptools
   - pip install -U Cython
-  - travis_retry cd code && python setup.py develop
+  - travis_retry cd code && python setup.py develop && python setup.py install
 script: 
   # Disable the rpy2 tests for Python 3.x
   # Disable the Cython tests for Python 3.x as they only work under 2.x

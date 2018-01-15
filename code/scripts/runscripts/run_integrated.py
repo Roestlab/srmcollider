@@ -118,9 +118,9 @@ for precursor in precursors_to_evaluate:
             precursor.q1 - par.q1_window, ssrcalc_low, precursor.q1 + par.q1_window,  ssrcalc_high,
             precursor.transition_group, min(par.max_uis,len(transitions)), par.q3_window, par.ppm,
             par.isotopes_up_to, isotope_correction, par, r_tree)
-    except ValueError: 
-      print "Too many transitions for", precursor.modification
-      continue
+    except ValueError:
+        print "Too many transitions for %s", precursor
+        continue
 
     for order in range(1,min(par.max_uis+1, len(transitions)+1)): 
         prepare.append( (result[order-1], collider.choose(len(transitions), 
@@ -132,17 +132,25 @@ for order in range(1,6):
     sum_all = sum([p[0]*1.0/p[1] for p in prepare if p[3] == order]) 
     nr_peptides = len([p for p in prepare if p[3] == order])
     if not par.quiet and not nr_peptides ==0: print "Order %s, Average non useable UIS %s" % (order, sum_all *1.0/ nr_peptides)
-    #cursor.execute("insert into hroest.result_completegraph_aggr (sum_nonUIS, nr_peptides, uisorder, experiment) VALUES (%s,%s,%s,'%s')" % (sum_all, nr_peptides, order, exp_key))
-
+    try:
+        cursor.execute(
+            "insert into srmcollider.result_completegraph_aggr (sum_nonUIS, nr_peptides, uisorder, experiment) VALUES (%s,%s,%s,'%s')" % (
+            exp_key, sum_all, nr_peptides, order))
+        db.commit()
+    except:
+        print "Error"
+        # Rollback in case there is any error
+        db.rollback()
+# disconnect from server
+db.close()
 """
 
-create table hroest.result_completegraph (
-exp_key          int(11),
-parent_key       int(11),
-non_useable_UIS  int(11),
-total_UIS        int(11),
-uisorder         int(4) 
-)
+create table srmcollider.result_completegraph_aggr (
+experiment      int(11),
+nr_peptides     int(11),
+uisorder        int(5),
+sum_nonUIS      int(11)
+);
 
 
 """

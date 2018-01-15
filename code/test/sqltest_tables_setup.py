@@ -11,7 +11,7 @@ if sys.argv[1] == "mysql":
     try: 
       conn = MySQLdb.connect(read_default_file=test_db.mysql_conf_file)
       c = conn.cursor()
-      c.connection.autocommit(True)
+      c.connection().autocommit(True)
     except MySQLdb.OperationalError as e:
         print "Could not connect to database: Please check the configuration in test/test_db.py!\n", e
         sys.exit()

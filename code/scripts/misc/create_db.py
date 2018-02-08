@@ -49,10 +49,6 @@ sys.path.append('.')
 import MySQLdb
 from srmcollider import Residues, DDB, collider
 
-print "Script is deactivated, please edit if you want to use it."
-# Since this drops tables, we done want to run it by accident.
-sys.exit() #remove this if you want to use this script. 
-
 from optparse import OptionParser, OptionGroup
 usage = "usage: %prog [options]\n" 
 parser = OptionParser(usage=usage)

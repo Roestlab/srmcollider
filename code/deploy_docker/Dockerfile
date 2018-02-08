@@ -12,8 +12,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server
 
 # Download and install srmcollider
 WORKDIR /home/srmcollider/
-# RUN git clone https://github.com/Roestlab/srmcollider.git
-RUN git clone https://github.com/Roestlab/srmcollider.git && cd srmcollider && git checkout feature/webtool
+RUN git clone https://github.com/Roestlab/srmcollider.git
+# RUN git clone https://github.com/Roestlab/srmcollider.git && cd srmcollider && git checkout feature/webtool
 
 WORKDIR /home/srmcollider/srmcollider/code/
 RUN python setup.py build
